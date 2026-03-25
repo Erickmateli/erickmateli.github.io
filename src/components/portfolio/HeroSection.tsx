@@ -2,8 +2,41 @@ import { ArrowDown } from "lucide-react";
 
 const HeroSection = () => {
   return (
-    <section className="min-h-[90vh] flex flex-col justify-center px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-      <div className="space-y-8 animate-fade-up">
+    <section className="min-h-[90vh] flex flex-col justify-center px-6 md:px-12 lg:px-24 max-w-5xl mx-auto relative overflow-hidden">
+      {/* Decorative grid dots */}
+      <div className="absolute top-12 right-0 opacity-[0.08] pointer-events-none hidden md:block">
+        <svg width="240" height="240" viewBox="0 0 240 240" fill="none">
+          {Array.from({ length: 100 }).map((_, i) => (
+            <circle
+              key={i}
+              cx={(i % 10) * 24 + 12}
+              cy={Math.floor(i / 10) * 24 + 12}
+              r="2"
+              fill="hsl(var(--foreground))"
+            />
+          ))}
+        </svg>
+      </div>
+
+      {/* Decorative diagonal line */}
+      <div className="absolute -bottom-20 -left-20 opacity-[0.06] pointer-events-none hidden md:block">
+        <svg width="400" height="400" viewBox="0 0 400 400" fill="none">
+          <line x1="0" y1="400" x2="400" y2="0" stroke="hsl(var(--primary))" strokeWidth="1" />
+          <line x1="40" y1="400" x2="400" y2="40" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+          <line x1="80" y1="400" x2="400" y2="80" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+        </svg>
+      </div>
+
+      {/* Abstract teal ring */}
+      <div className="absolute top-1/4 -right-32 opacity-[0.05] pointer-events-none hidden lg:block">
+        <svg width="320" height="320" viewBox="0 0 320 320" fill="none">
+          <circle cx="160" cy="160" r="140" stroke="hsl(var(--primary))" strokeWidth="1" />
+          <circle cx="160" cy="160" r="120" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+          <circle cx="160" cy="160" r="80" stroke="hsl(var(--primary))" strokeWidth="0.5" />
+        </svg>
+      </div>
+
+      <div className="space-y-8 animate-fade-up relative z-10">
         <p className="text-sm font-sans font-medium tracking-[0.2em] uppercase text-primary">
           Portfolio
         </p>
