@@ -1,0 +1,57 @@
+const skillGroups = [
+  {
+    category: "Product Design",
+    skills: ["User flows & journey mapping", "Systems thinking", "Usability & accessibility", "Interaction design"],
+  },
+  {
+    category: "UX Research & Validation",
+    skills: ["Stakeholder interviews", "Usability testing", "Data-informed design", "Partner feedback loops"],
+  },
+  {
+    category: "Frontend Engineering",
+    skills: ["React & Next.js", "TypeScript", "Component architecture", "Performance optimization"],
+  },
+  {
+    category: "Design Systems",
+    skills: ["Token-based systems", "Component libraries", "Documentation", "Cross-team adoption"],
+  },
+  {
+    category: "Platform Strategy",
+    skills: ["Embeddable architectures", "Partner integrations", "API-first design", "Multi-market scaling"],
+  },
+];
+
+const SkillsSection = () => {
+  return (
+    <section className="py-24 px-6 md:px-12 lg:px-24 bg-card">
+      <div className="max-w-5xl mx-auto">
+        <p className="text-sm font-sans font-medium tracking-[0.2em] uppercase text-primary mb-4">
+          Capabilities
+        </p>
+        <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-16">
+          Skills & Expertise
+        </h2>
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+          {skillGroups.map((group) => (
+            <div key={group.category}>
+              <h3 className="text-base font-serif text-foreground mb-3">{group.category}</h3>
+              <ul className="space-y-2">
+                {group.skills.map((skill) => (
+                  <li
+                    key={skill}
+                    className="text-sm text-muted-foreground font-sans flex items-center gap-2"
+                  >
+                    <span className="w-1 h-1 rounded-full bg-primary shrink-0" />
+                    {skill}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default SkillsSection;
