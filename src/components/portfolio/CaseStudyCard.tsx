@@ -12,6 +12,7 @@ interface CaseStudyProps {
   solution: string[];
   outcome: string[];
   reflection: string;
+  images?: { src: string; alt: string }[];
 }
 
 const CaseStudyCard = ({
@@ -25,6 +26,7 @@ const CaseStudyCard = ({
   solution,
   outcome,
   reflection,
+  images,
 }: CaseStudyProps) => {
   const [expanded, setExpanded] = useState(false);
 
@@ -102,6 +104,34 @@ const CaseStudyCard = ({
                   </ul>
                 </div>
               </div>
+
+              {/* Project Screenshots */}
+              {images && images.length > 0 && (
+                <div className="space-y-4">
+                  <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary">
+                    Project Screenshots
+                  </p>
+                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {images.map((img, i) => (
+                      <div
+                        key={i}
+                        className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/30 transition-colors"
+                      >
+                        <img
+                          src={img.src}
+                          alt={img.alt}
+                          className="w-full h-auto object-cover"
+                          loading="lazy"
+                        />
+                        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
+                        <p className="text-[10px] font-sans text-muted-foreground px-2 py-1.5 bg-card/90 border-t border-border">
+                          {img.alt}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               <div className="bg-card rounded-lg p-6 border border-border">
                 <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-2">
