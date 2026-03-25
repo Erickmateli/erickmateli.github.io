@@ -23,8 +23,25 @@ const skillGroups = [
 
 const SkillsSection = () => {
   return (
-    <section className="py-24 px-6 md:px-12 lg:px-24 bg-card">
-      <div className="max-w-5xl mx-auto">
+    <section className="py-24 px-6 md:px-12 lg:px-24 bg-card relative overflow-hidden">
+      {/* Decorative triangle grid */}
+      <div className="absolute -bottom-10 -right-10 opacity-[0.03] pointer-events-none hidden md:block">
+        <svg width="300" height="300" viewBox="0 0 300 300" fill="none">
+          {Array.from({ length: 6 }).map((_, row) =>
+            Array.from({ length: 6 }).map((_, col) => (
+              <polygon
+                key={`${row}-${col}`}
+                points={`${col * 50 + 25},${row * 50} ${col * 50 + 50},${row * 50 + 50} ${col * 50},${row * 50 + 50}`}
+                fill="none"
+                stroke="hsl(var(--foreground))"
+                strokeWidth="0.5"
+              />
+            ))
+          )}
+        </svg>
+      </div>
+
+      <div className="max-w-5xl mx-auto relative z-10">
         <p className="text-sm font-sans font-medium tracking-[0.2em] uppercase text-primary mb-4">
           Capabilities
         </p>
