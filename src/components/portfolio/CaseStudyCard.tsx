@@ -1,35 +1,25 @@
-import { useState } from "react";
-import { ChevronDown, ChevronUp } from "lucide-react";
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
 
 interface CaseStudyProps {
+  slug: string;
   number: string;
   title: string;
   subtitle: string;
   context: string;
   problem: string;
   role: string;
-  approach: string[];
-  solution: string[];
-  outcome: string[];
-  reflection: string;
-  images?: { src: string; alt: string }[];
 }
 
 const CaseStudyCard = ({
+  slug,
   number,
   title,
   subtitle,
   context,
   problem,
   role,
-  approach,
-  solution,
-  outcome,
-  reflection,
-  images,
 }: CaseStudyProps) => {
-  const [expanded, setExpanded] = useState(false);
-
   return (
     <article className="border-t border-border py-12 md:py-16">
       <div className="grid md:grid-cols-[auto_1fr] gap-8 md:gap-16">
@@ -59,90 +49,13 @@ const CaseStudyCard = ({
             </div>
           </div>
 
-          <button
-            onClick={() => setExpanded(!expanded)}
-            className="flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
+          <Link
+            to={`/case-study/${slug}`}
+            className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
           >
-            {expanded ? "Show less" : "Read the full story"}
-            {expanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-          </button>
-
-          {expanded && (
-            <div className="space-y-8 animate-fade-up">
-              <div className="grid md:grid-cols-3 gap-6 text-sm font-sans">
-                <div>
-                  <p className="font-medium text-foreground mb-2">Approach</p>
-                  <ul className="space-y-1 text-muted-foreground">
-                    {approach.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="text-primary mt-1.5 w-1 h-1 rounded-full bg-primary shrink-0" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="font-medium text-foreground mb-2">Solution</p>
-                  <ul className="space-y-1 text-muted-foreground">
-                    {solution.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="w-1 h-1 rounded-full bg-primary shrink-0 mt-1.5" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-                <div>
-                  <p className="font-medium text-foreground mb-2">Outcome</p>
-                  <ul className="space-y-1 text-muted-foreground">
-                    {outcome.map((item, i) => (
-                      <li key={i} className="flex items-start gap-2">
-                        <span className="w-1 h-1 rounded-full bg-primary shrink-0 mt-1.5" />
-                        {item}
-                      </li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-
-              {/* Project Screenshots */}
-              {images && images.length > 0 && (
-                <div className="space-y-4">
-                  <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary">
-                    Project Screenshots
-                  </p>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                    {images.map((img, i) => (
-                      <div
-                        key={i}
-                        className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/30 transition-colors"
-                      >
-                        <img
-                          src={img.src}
-                          alt={img.alt}
-                          className="w-full h-auto object-cover"
-                          loading="lazy"
-                        />
-                        <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
-                        <p className="text-[10px] font-sans text-muted-foreground px-2 py-1.5 bg-card/90 border-t border-border">
-                          {img.alt}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              <div className="bg-card rounded-lg p-6 border border-border">
-                <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-2">
-                  Reflection
-                </p>
-                <p className="text-sm text-muted-foreground font-sans leading-relaxed italic">
-                  "{reflection}"
-                </p>
-              </div>
-            </div>
-          )}
+            Read the full story
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
       </div>
     </article>
