@@ -7,6 +7,11 @@ import aspinBeforeMobile from "@/assets/aspin-before-mobile.png";
 import aspinBeforeShowcase from "@/assets/aspin-before-showcase.png";
 import aspinBeforeDesktop from "@/assets/aspin-before-desktop.png";
 import aspinAfterShowcase from "@/assets/aspin-after-showcase.png";
+import aspinBeforeInteriorCustomer from "@/assets/aspin-before-interior-customer.png";
+import aspinBeforeInteriorClaims from "@/assets/aspin-before-interior-claims.png";
+import aspinAfterInteriorProfile from "@/assets/aspin-after-interior-profile.png";
+import aspinAfterInteriorPolicies from "@/assets/aspin-after-interior-policies.png";
+import aspinAfterInteriorClaims from "@/assets/aspin-after-interior-claims.png";
 
 const beforeImages = [
   { src: aspinBeforeDesktop, alt: "ASPIN Desktop — Before Redesign" },
@@ -14,11 +19,22 @@ const beforeImages = [
   { src: aspinBeforeShowcase, alt: "ASPIN Multi-Device — Before Redesign" },
 ];
 
+const beforeInteriorImages = [
+  { src: aspinBeforeInteriorCustomer, alt: "Customer Details — Before Redesign" },
+  { src: aspinBeforeInteriorClaims, alt: "Claims Dashboard — Before Redesign" },
+];
+
 const afterImages = [
   { src: aspinAfterShowcase, alt: "ASPIN Redesigned Landing Page — Multi-Device" },
 ];
 
-const allImages = [...beforeImages, ...afterImages];
+const afterInteriorImages = [
+  { src: aspinAfterInteriorProfile, alt: "Customer Profile — After Redesign" },
+  { src: aspinAfterInteriorPolicies, alt: "Customer Policies — After Redesign" },
+  { src: aspinAfterInteriorClaims, alt: "Claims Dashboard — After Redesign" },
+];
+
+const allImages = [...beforeImages, ...beforeInteriorImages, ...afterImages, ...afterInteriorImages];
 
 const FeaturedCaseStudy = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
