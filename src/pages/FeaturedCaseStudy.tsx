@@ -332,14 +332,14 @@ const FeaturedCaseStudy = () => {
           </div>
         </section>
 
-        {/* ───────── After Screenshot ───────── */}
+        {/* ───────── After Screenshots ───────── */}
         <section className="py-12 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-6">
             After — The Redesigned Experience
           </p>
           <button
-            onClick={() => setLightboxIndex(beforeImages.length)}
-            className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left w-full max-w-3xl"
+            onClick={() => setLightboxIndex(beforeImages.length + beforeInteriorImages.length)}
+            className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left w-full max-w-3xl mb-8"
           >
             <div className="aspect-[16/10] overflow-hidden">
               <img
@@ -353,6 +353,31 @@ const FeaturedCaseStudy = () => {
               ASPIN Redesigned Landing Page — Multi-Device Preview
             </p>
           </button>
+
+          <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-6">
+            After — Inside the Redesigned Platform
+          </p>
+          <div className="grid md:grid-cols-3 gap-4">
+            {afterInteriorImages.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(beforeImages.length + beforeInteriorImages.length + afterImages.length + i)}
+                className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
+              >
+                <div className="aspect-[16/10] overflow-hidden">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
+                  {img.alt}
+                </p>
+              </button>
+            ))}
+          </div>
         </section>
 
         <div className="border-t border-border" />
