@@ -146,7 +146,7 @@ const FeaturedCaseStudy = () => {
           <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-6">
             Before — The Existing Experience
           </p>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
             {beforeImages.map((img, i) => (
               <button
                 key={i}
@@ -154,6 +154,31 @@ const FeaturedCaseStudy = () => {
                 className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
               >
                 <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
+                  {img.alt}
+                </p>
+              </button>
+            ))}
+          </div>
+
+          <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-6">
+            Before — Inside the Platform
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {beforeInteriorImages.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(beforeImages.length + i)}
+                className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
+              >
+                <div className="aspect-[16/10] overflow-hidden">
                   <img
                     src={img.src}
                     alt={img.alt}
