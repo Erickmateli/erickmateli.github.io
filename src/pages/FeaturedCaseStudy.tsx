@@ -7,6 +7,11 @@ import aspinBeforeMobile from "@/assets/aspin-before-mobile.png";
 import aspinBeforeShowcase from "@/assets/aspin-before-showcase.png";
 import aspinBeforeDesktop from "@/assets/aspin-before-desktop.png";
 import aspinAfterShowcase from "@/assets/aspin-after-showcase.png";
+import aspinBeforeInteriorCustomer from "@/assets/aspin-before-interior-customer.png";
+import aspinBeforeInteriorClaims from "@/assets/aspin-before-interior-claims.png";
+import aspinAfterInteriorProfile from "@/assets/aspin-after-interior-profile.png";
+import aspinAfterInteriorPolicies from "@/assets/aspin-after-interior-policies.png";
+import aspinAfterInteriorClaims from "@/assets/aspin-after-interior-claims.png";
 
 const beforeImages = [
   { src: aspinBeforeDesktop, alt: "ASPIN Desktop — Before Redesign" },
@@ -14,11 +19,22 @@ const beforeImages = [
   { src: aspinBeforeShowcase, alt: "ASPIN Multi-Device — Before Redesign" },
 ];
 
+const beforeInteriorImages = [
+  { src: aspinBeforeInteriorCustomer, alt: "Customer Details — Before Redesign" },
+  { src: aspinBeforeInteriorClaims, alt: "Claims Dashboard — Before Redesign" },
+];
+
 const afterImages = [
   { src: aspinAfterShowcase, alt: "ASPIN Redesigned Landing Page — Multi-Device" },
 ];
 
-const allImages = [...beforeImages, ...afterImages];
+const afterInteriorImages = [
+  { src: aspinAfterInteriorProfile, alt: "Customer Profile — After Redesign" },
+  { src: aspinAfterInteriorPolicies, alt: "Customer Policies — After Redesign" },
+  { src: aspinAfterInteriorClaims, alt: "Claims Dashboard — After Redesign" },
+];
+
+const allImages = [...beforeImages, ...beforeInteriorImages, ...afterImages, ...afterInteriorImages];
 
 const FeaturedCaseStudy = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
@@ -130,7 +146,7 @@ const FeaturedCaseStudy = () => {
           <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-6">
             Before — The Existing Experience
           </p>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
             {beforeImages.map((img, i) => (
               <button
                 key={i}
@@ -138,6 +154,31 @@ const FeaturedCaseStudy = () => {
                 className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
               >
                 <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
+                  {img.alt}
+                </p>
+              </button>
+            ))}
+          </div>
+
+          <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-6">
+            Before — Inside the Platform
+          </p>
+          <div className="grid md:grid-cols-2 gap-4">
+            {beforeInteriorImages.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(beforeImages.length + i)}
+                className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
+              >
+                <div className="aspect-[16/10] overflow-hidden">
                   <img
                     src={img.src}
                     alt={img.alt}
@@ -291,14 +332,14 @@ const FeaturedCaseStudy = () => {
           </div>
         </section>
 
-        {/* ───────── After Screenshot ───────── */}
+        {/* ───────── After Screenshots ───────── */}
         <section className="py-12 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-6">
             After — The Redesigned Experience
           </p>
           <button
-            onClick={() => setLightboxIndex(beforeImages.length)}
-            className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left w-full max-w-3xl"
+            onClick={() => setLightboxIndex(beforeImages.length + beforeInteriorImages.length)}
+            className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left w-full max-w-3xl mb-8"
           >
             <div className="aspect-[16/10] overflow-hidden">
               <img
@@ -312,6 +353,31 @@ const FeaturedCaseStudy = () => {
               ASPIN Redesigned Landing Page — Multi-Device Preview
             </p>
           </button>
+
+          <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-6">
+            After — Inside the Redesigned Platform
+          </p>
+          <div className="grid md:grid-cols-3 gap-4">
+            {afterInteriorImages.map((img, i) => (
+              <button
+                key={i}
+                onClick={() => setLightboxIndex(beforeImages.length + beforeInteriorImages.length + afterImages.length + i)}
+                className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
+              >
+                <div className="aspect-[16/10] overflow-hidden">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
+                  {img.alt}
+                </p>
+              </button>
+            ))}
+          </div>
         </section>
 
         <div className="border-t border-border" />
