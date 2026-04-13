@@ -7,7 +7,7 @@ const Navbar = () => {
           <a href="#about" className="hover:text-foreground transition-colors hidden sm:block">About</a>
           <a href="#work" className="hover:text-foreground transition-colors hidden sm:block">Work</a>
           <a
-            href="mailto:hello@example.com"
+            href="#contact"
             className="px-4 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition-opacity"
           >
             Contact

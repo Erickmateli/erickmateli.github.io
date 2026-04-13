@@ -1,6 +1,6 @@
 const ClosingSection = () => {
   return (
-    <section className="py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto text-center relative overflow-hidden">
+    <section id="contact" className="py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto text-center relative overflow-hidden">
       {/* Decorative concentric circles */}
       <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 opacity-[0.03] pointer-events-none">
         <svg width="600" height="600" viewBox="0 0 600 600" fill="none">
@@ -23,8 +23,23 @@ const ClosingSection = () => {
           engineering reality intersect. If you're building something that needs
           strategic product thinking grounded in technical depth, let's talk.
         </p>
+        <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-12">
+          <div className="text-center sm:text-left">
+            <p className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1">Phone</p>
+            <a href="tel:+54716435830" className="font-sans text-foreground hover:text-primary transition-colors">
+              (+54) 716 435 830
+            </a>
+          </div>
+          <div className="hidden sm:block w-px h-8 bg-border" />
+          <div className="text-center sm:text-left">
+            <p className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1">Email</p>
+            <a href="mailto:matelierick@gmail.com" className="font-sans text-foreground hover:text-primary transition-colors">
+              matelierick@gmail.com
+            </a>
+          </div>
+        </div>
         <a
-          href="mailto:hello@example.com"
+          href="mailto:matelierick@gmail.com"
           className="inline-flex items-center justify-center px-8 py-3 rounded-lg bg-primary text-primary-foreground font-sans text-sm font-medium hover:opacity-90 transition-opacity"
         >
           Get in Touch
