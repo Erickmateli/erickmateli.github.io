@@ -56,14 +56,33 @@ const CaseStudyDetail = () => {
       <main className="pt-14">
         {/* Hero */}
         <section className="py-16 md:py-24 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <span className="text-8xl md:text-9xl font-serif text-muted-foreground/20 leading-none block mb-6">
-            {study.number}
+          <span className="text-[10px] font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
+            Case Study · {study.subtitle}
           </span>
           <h1 className="text-3xl md:text-5xl font-serif text-foreground leading-tight mb-3">
             {study.title}
           </h1>
           <p className="text-primary font-sans text-sm font-medium tracking-wide">{study.subtitle}</p>
         </section>
+
+        {/* Hero image - first screenshot as a large visual */}
+        {study.images && study.images.length > 0 && (
+          <section className="px-6 md:px-12 lg:px-24 max-w-5xl mx-auto pb-16">
+            <button
+              onClick={() => setLightboxIndex(0)}
+              className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left w-full"
+            >
+              <div className="aspect-[16/9] overflow-hidden">
+                <img
+                  src={study.images[0].src}
+                  alt={study.images[0].alt}
+                  className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
+                  loading="lazy"
+                />
+              </div>
+            </button>
+          </section>
+        )}
 
         {/* Context / Problem / Role */}
         <section className="px-6 md:px-12 lg:px-24 max-w-5xl mx-auto pb-16">
@@ -94,36 +113,67 @@ const CaseStudyDetail = () => {
           </div>
         </section>
 
-        {/* Screenshots */}
+        {/* Screenshots - visual gallery */}
         {study.images && study.images.length > 0 && (
           <>
             <div className="border-t border-border" />
             <section className="py-16 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-8">
-                Project Screenshots
+              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-3">
+                Product Screenshots
               </p>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
-                {study.images.map((img, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setLightboxIndex(i)}
-                    className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
-                  >
-                    <div className="aspect-[4/3] overflow-hidden">
-                      <img
-                        src={img.src}
-                        alt={img.alt}
-                        className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                        loading="lazy"
-                      />
-                    </div>
-                    <div className="absolute inset-0 bg-foreground/0 group-hover:bg-foreground/5 transition-colors" />
-                    <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
-                      {img.alt}
-                    </p>
-                  </button>
-                ))}
-              </div>
+              <p className="text-sm font-sans text-muted-foreground mb-8">
+                Key screens from the onboarding journey — from product selection to successful application.
+              </p>
+
+              {/* Featured pair */}
+              {study.images.length > 1 && (
+                <div className="grid md:grid-cols-2 gap-4 mb-4">
+                  {study.images.slice(0, 2).map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setLightboxIndex(i)}
+                      className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
+                    >
+                      <div className="aspect-[4/3] overflow-hidden">
+                        <img
+                          src={img.src}
+                          alt={img.alt}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                      <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
+                        {img.alt}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Rest in 3-col grid */}
+              {study.images.length > 2 && (
+                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+                  {study.images.slice(2).map((img, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setLightboxIndex(i + 2)}
+                      className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
+                    >
+                      <div className="aspect-[4/3] overflow-hidden">
+                        <img
+                          src={img.src}
+                          alt={img.alt}
+                          className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                          loading="lazy"
+                        />
+                      </div>
+                      <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
+                        {img.alt}
+                      </p>
+                    </button>
+                  ))}
+                </div>
+              )}
             </section>
           </>
         )}

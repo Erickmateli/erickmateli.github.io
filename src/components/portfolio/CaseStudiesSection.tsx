@@ -1,6 +1,8 @@
 import { caseStudies } from "@/lib/caseStudies";
 import CaseStudyCard from "./CaseStudyCard";
 import FeaturedCaseStudyCard from "./FeaturedCaseStudyCard";
+import FeaturedYellowPagesCard from "./FeaturedYellowPagesCard";
+
 const CaseStudiesSection = () => {
   return (
     <section id="work" className="py-24 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto relative">
@@ -18,6 +20,7 @@ const CaseStudiesSection = () => {
         Case Studies
       </h2>
       <FeaturedCaseStudyCard />
+      <FeaturedYellowPagesCard />
       <div>
         {caseStudies.map((cs) => (
           <CaseStudyCard key={cs.number} {...cs} />
