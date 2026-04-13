@@ -99,8 +99,39 @@ export const caseStudies: CaseStudy[] = [
     ],
   },
   {
-    slug: "mzanu",
+    slug: "yellow-pages",
     number: "03",
+    title: "Redesigning Yellow Pages Kenya",
+    subtitle: "Yellow Pages Directory Services",
+    context:
+      "A legacy business directory platform operating across six countries — Kenya, Tanzania, Mozambique, Angola, Cape Verde, and East Timor — needing modernization.",
+    problem:
+      "Cluttered UI, slow load times, poor mobile experience, and high bounce rates. Users came with clear intent but the product created friction at every step.",
+    role: "UX Design Lead + Frontend Developer",
+    approach: [
+      "Secondary research and competitor analysis",
+      "Defined core journey: Search → Find → Contact",
+      "Wireframes in Figma with fast feedback loops",
+      "Built interactive prototype using HTML, CSS, JavaScript",
+    ],
+    solution: [
+      "Redesigned homepage with clear search and categories",
+      "Improved search results with filters and sticky navigation",
+      "Restructured business detail page for readability and action",
+      "Fully responsive design across all devices",
+    ],
+    outcome: [
+      "Users grew from 472K to 1.7M (260% increase)",
+      "Sessions increased from 631K to 2.3M",
+      "Bounce rate dropped from 33.78% to 24.43%",
+      "Rolled out across six countries",
+    ],
+    reflection:
+      "Great UX isn't about adding more — it's about removing everything that stands between a user and their goal. Clarity, speed, and user-centered thinking drive measurable business impact.",
+  },
+  {
+    slug: "mzanu",
+    number: "04",
     title: "Improving Delivery Efficiency Through Design Collaboration",
     subtitle: "Mzanu",
     context: "A partner onboarding platform facing typical development delays.",
