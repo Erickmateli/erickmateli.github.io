@@ -26,8 +26,8 @@ const ClosingSection = () => {
         <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-12">
           <div className="text-center sm:text-left">
             <p className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1">Phone</p>
-            <a href="tel:+54716435830" className="font-sans text-foreground hover:text-primary transition-colors">
-              (+54) 716 435 830
+            <a href="tel:+254716435830" className="font-sans text-foreground hover:text-primary transition-colors">
+              (+254) 716 435 830
             </a>
           </div>
           <div className="hidden sm:block w-px h-8 bg-border" />
