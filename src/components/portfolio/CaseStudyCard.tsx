@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight } from "lucide-react";
+import posthog from "posthog-js";
 
 interface CaseStudyProps {
   slug: string;
@@ -52,6 +53,7 @@ const CaseStudyCard = ({
           <Link
             to={`/case-study/${slug}`}
             className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
+            onClick={() => posthog.capture("read_full_story_clicked", { case_study: slug })}
           >
             Read the full story
             <ArrowRight className="w-4 h-4" />

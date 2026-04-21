@@ -1,5 +1,7 @@
+import { useEffect } from "react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
+import posthog from "posthog-js";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -8,7 +10,16 @@ import CaseStudyDetail from "./pages/CaseStudyDetail.tsx";
 import FeaturedCaseStudy from "./pages/FeaturedCaseStudy.tsx";
 import YellowPagesCaseStudy from "./pages/YellowPagesCaseStudy.tsx";
 import NotFound from "./pages/NotFound.tsx";
+
 const queryClient = new QueryClient();
+
+function PostHogPageView() {
+  const location = useLocation();
+  useEffect(() => {
+    posthog.capture("$pageview");
+  }, [location]);
+  return null;
+}
 
 const App = () => (
   <QueryClientProvider client={queryClient}>
@@ -16,6 +27,7 @@ const App = () => (
       <Toaster />
       <Sonner />
       <BrowserRouter>
+        <PostHogPageView />
         <Routes>
           <Route path="/" element={<Index />} />
           <Route path="/case-study/aspin" element={<FeaturedCaseStudy />} />

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Star } from "lucide-react";
+import posthog from "posthog-js";
 import aspinAfterShowcase from "@/assets/aspin-after-showcase.png";
 
 const FeaturedCaseStudyCard = () => {
@@ -40,6 +41,7 @@ const FeaturedCaseStudyCard = () => {
           <Link
             to="/case-study/aspin"
             className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
+            onClick={() => posthog.capture("read_full_story_clicked", { case_study: "aspin" })}
           >
             Read the full story
             <ArrowRight className="w-4 h-4" />

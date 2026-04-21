@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Star } from "lucide-react";
+import posthog from "posthog-js";
 import ypAfterShowcase from "@/assets/yp-after-showcase.jpg";
 
 const FeaturedYellowPagesCard = () => {
@@ -55,6 +56,7 @@ const FeaturedYellowPagesCard = () => {
           <Link
             to="/case-study/yellow-pages"
             className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
+            onClick={() => posthog.capture("read_full_story_clicked", { case_study: "yellow-pages" })}
           >
             Read the full story
             <ArrowRight className="w-4 h-4" />

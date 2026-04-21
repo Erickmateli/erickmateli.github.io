@@ -1,3 +1,5 @@
+import posthog from "posthog-js";
+
 const ClosingSection = () => {
   return (
     <section id="contact" className="py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto text-center relative overflow-hidden">
@@ -41,6 +43,7 @@ const ClosingSection = () => {
         <a
           href="mailto:matelierick@gmail.com"
           className="inline-flex items-center justify-center px-8 py-3 rounded-lg bg-primary text-primary-foreground font-sans text-sm font-medium hover:opacity-90 transition-opacity"
+          onClick={() => posthog.capture("get_in_touch_clicked")}
         >
           Get in Touch
         </a>
