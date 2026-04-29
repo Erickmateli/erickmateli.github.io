@@ -10,11 +10,13 @@ import CaseStudyDetail from "./pages/CaseStudyDetail.tsx";
 import FeaturedCaseStudy from "./pages/FeaturedCaseStudy.tsx";
 import YellowPagesCaseStudy from "./pages/YellowPagesCaseStudy.tsx";
 import NotFound from "./pages/NotFound.tsx";
+import { useVisitNotification } from "./hooks/use-visit-notification.ts";
 
 const queryClient = new QueryClient();
 
 function PostHogPageView() {
   const location = useLocation();
+  useVisitNotification();
   useEffect(() => {
     posthog.capture("$pageview");
   }, [location]);

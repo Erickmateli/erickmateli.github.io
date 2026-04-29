@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import posthog from "posthog-js";
+import { trackEvent } from "@/lib/track-event";
 import ImageLightbox from "@/components/portfolio/ImageLightbox";
 
 import aspinBeforeMobile from "@/assets/aspin-before-mobile.png";
@@ -515,7 +515,7 @@ const FeaturedCaseStudy = () => {
           <Link
             to="/#work"
             className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
-            onClick={() => posthog.capture("back_to_case_studies_clicked", { from: "aspin" })}
+            onClick={() => trackEvent("back_to_case_studies_clicked", { from: "aspin" })}
           >
             <ArrowLeft className="w-4 h-4" />
             Back to all case studies

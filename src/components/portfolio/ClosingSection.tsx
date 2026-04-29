@@ -1,4 +1,4 @@
-import posthog from "posthog-js";
+import { trackEvent } from "@/lib/track-event";
 
 const ClosingSection = () => {
   return (
@@ -43,7 +43,7 @@ const ClosingSection = () => {
         <a
           href="mailto:matelierick@gmail.com"
           className="inline-flex items-center justify-center px-8 py-3 rounded-lg bg-primary text-primary-foreground font-sans text-sm font-medium hover:opacity-90 transition-opacity"
-          onClick={() => posthog.capture("get_in_touch_clicked")}
+          onClick={() => trackEvent("get_in_touch_clicked")}
         >
           Get in Touch
         </a>

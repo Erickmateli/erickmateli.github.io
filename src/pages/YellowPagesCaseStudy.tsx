@@ -1,14 +1,14 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
-import posthog from "posthog-js";
+import { trackEvent } from "@/lib/track-event";
 import ImageLightbox from "@/components/portfolio/ImageLightbox";
 
 import ypBeforeHomepage from "@/assets/yp-before-homepage.jpg";
 import ypAfterShowcase from "@/assets/yp-after-showcase.jpg";
 import ypWireframes from "@/assets/yp-wireframes.png";
-import ypAnalytics2018 from "@/assets/yp-analytics-2018.jpg";
-import ypAnalytics2020 from "@/assets/yp-analytics-2020.jpg";
+import ypAnalytics2018 from "@/assets/yp-analytics-2018.png";
+import ypAnalytics2020 from "@/assets/yp-analytics-2020.png";
 
 const beforeImages = [
   { src: ypBeforeHomepage, alt: "Yellow Pages Kenya — Original Homepage" },
@@ -583,7 +583,7 @@ const YellowPagesCaseStudy = () => {
           <Link
             to="/#work"
             className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
-            onClick={() => posthog.capture("back_to_case_studies_clicked", { from: "yellow-pages" })}
+            onClick={() => trackEvent("back_to_case_studies_clicked", { from: "yellow-pages" })}
           >
             <ArrowLeft className="w-4 h-4" />
             Back to all case studies

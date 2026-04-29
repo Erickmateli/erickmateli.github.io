@@ -1,5 +1,5 @@
 import { ArrowDown } from "lucide-react";
-import posthog from "posthog-js";
+import { trackEvent } from "@/lib/track-event";
 
 const HeroSection = () => {
   return (
@@ -57,7 +57,7 @@ const HeroSection = () => {
           <a
             href="#about"
             className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
-            onClick={() => posthog.capture("scroll_to_explore_clicked")}
+            onClick={() => trackEvent("scroll_to_explore_clicked")}
           >
             Scroll to explore
             <ArrowDown className="w-4 h-4 animate-bounce" />

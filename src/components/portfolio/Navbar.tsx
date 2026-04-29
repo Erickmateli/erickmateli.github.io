@@ -1,4 +1,4 @@
-import posthog from "posthog-js";
+import { trackEvent } from "@/lib/track-event";
 
 const Navbar = () => {
   return (
@@ -9,21 +9,21 @@ const Navbar = () => {
           <a
             href="#about"
             className="hover:text-foreground transition-colors hidden sm:block"
-            onClick={() => posthog.capture("nav_clicked", { label: "About" })}
+            onClick={() => trackEvent("nav_clicked", { label: "About" })}
           >
             About
           </a>
           <a
             href="#work"
             className="hover:text-foreground transition-colors hidden sm:block"
-            onClick={() => posthog.capture("nav_clicked", { label: "Work" })}
+            onClick={() => trackEvent("nav_clicked", { label: "Work" })}
           >
             Work
           </a>
           <a
             href="#contact"
             className="px-4 py-1.5 rounded-md bg-primary text-primary-foreground text-xs font-medium hover:opacity-90 transition-opacity"
-            onClick={() => posthog.capture("nav_clicked", { label: "Contact" })}
+            onClick={() => trackEvent("nav_clicked", { label: "Contact" })}
           >
             Contact
           </a>
