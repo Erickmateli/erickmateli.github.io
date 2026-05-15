@@ -9,6 +9,7 @@ import Index from "./pages/Index.tsx";
 import CaseStudyDetail from "./pages/CaseStudyDetail.tsx";
 import FeaturedCaseStudy from "./pages/FeaturedCaseStudy.tsx";
 import YellowPagesCaseStudy from "./pages/YellowPagesCaseStudy.tsx";
+import AspinMarketplaceCaseStudy from "./pages/AspinMarketplaceCaseStudy.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { useVisitNotification } from "./hooks/use-visit-notification.ts";
 
@@ -34,6 +35,7 @@ const App = () => (
           <Route path="/" element={<Index />} />
           <Route path="/case-study/aspin" element={<FeaturedCaseStudy />} />
           <Route path="/case-study/yellow-pages" element={<YellowPagesCaseStudy />} />
+          <Route path="/case-study/aspin-marketplace" element={<AspinMarketplaceCaseStudy />} />
           <Route path="/case-study/:slug" element={<CaseStudyDetail />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />

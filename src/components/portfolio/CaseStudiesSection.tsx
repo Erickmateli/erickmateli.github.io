@@ -2,6 +2,7 @@ import { caseStudies } from "@/lib/caseStudies";
 import CaseStudyCard from "./CaseStudyCard";
 import FeaturedCaseStudyCard from "./FeaturedCaseStudyCard";
 import FeaturedYellowPagesCard from "./FeaturedYellowPagesCard";
+import FeaturedAspinMarketplaceCard from "./FeaturedAspinMarketplaceCard";
 
 const CaseStudiesSection = () => {
   return (
@@ -21,6 +22,7 @@ const CaseStudiesSection = () => {
       </h2>
       <FeaturedCaseStudyCard />
       <FeaturedYellowPagesCard />
+      <FeaturedAspinMarketplaceCard />
       <div>
         {caseStudies.map((cs) => (
           <CaseStudyCard key={cs.number} {...cs} />
