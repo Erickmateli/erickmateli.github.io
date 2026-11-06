@@ -1,3 +1,5 @@
+import erickPhoto from "@/assets/erick-mateli.webp";
+
 const AboutSection = () => {
   return (
     <section id="about" className="py-24 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto relative">
@@ -19,17 +21,17 @@ const AboutSection = () => {
             <span className="italic text-primary">Product Strategy</span>
           </h2>
 
-          {/* Small abstract visual */}
-          <div className="mt-8 hidden md:block">
-            <svg width="120" height="60" viewBox="0 0 120 60" fill="none" className="opacity-20">
-              <rect x="0" y="0" width="24" height="24" fill="hsl(var(--primary))" />
-              <rect x="32" y="0" width="24" height="24" stroke="hsl(var(--primary))" strokeWidth="1" fill="none" />
-              <rect x="64" y="0" width="24" height="24" fill="hsl(var(--primary))" opacity="0.3" />
-              <rect x="0" y="32" width="24" height="24" stroke="hsl(var(--primary))" strokeWidth="1" fill="none" />
-              <rect x="32" y="32" width="24" height="24" fill="hsl(var(--primary))" opacity="0.5" />
-              <rect x="64" y="32" width="24" height="24" stroke="hsl(var(--primary))" strokeWidth="1" fill="none" />
-            </svg>
-          </div>
+          <figure className="mt-8 relative w-48 md:w-full max-w-[260px]">
+            <div className="absolute -bottom-3 -right-3 w-full h-full rounded-lg border border-primary/30" aria-hidden="true" />
+            <img
+              src={erickPhoto}
+              alt="Portrait of Erick Mateli"
+              width={800}
+              height={800}
+              loading="lazy"
+              className="relative w-full aspect-square object-cover rounded-lg bg-muted"
+            />
+          </figure>
         </div>
         <div className="space-y-6 text-muted-foreground font-sans leading-relaxed">
           <p>

@@ -1,3 +1,4 @@
+import { useDocumentTitle } from "@/hooks/use-document-title";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
@@ -227,6 +228,7 @@ const TRUST_ITEMS = [
 ];
 
 const AspinMarketplaceCaseStudy = () => {
+  useDocumentTitle("ASPIN Marketplace Concept");
   // Reading progress
   const [progress, setProgress] = useState(0);
   const handleScroll = useCallback(() => {
@@ -261,7 +263,7 @@ const AspinMarketplaceCaseStudy = () => {
             <ArrowLeft className="w-4 h-4" />
             Back to portfolio
           </Link>
-          <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-primary">
+          <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
             Featured Case Study
           </span>
         </div>
@@ -276,7 +278,7 @@ const AspinMarketplaceCaseStudy = () => {
         {/* ───────── Hero ───────── */}
         <section className="py-20 md:py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal>
-            <span className="text-[10px] font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
+            <span className="text-xs font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
               Featured · Case Study
             </span>
             <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-[1.1] mb-6">
@@ -313,7 +315,7 @@ const AspinMarketplaceCaseStudy = () => {
                 { label: "Method", value: "AI Research + Systems Thinking" },
               ].map((item) => (
                 <div key={item.label}>
-                  <p className="text-[10px] font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-1">{item.label}</p>
+                  <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-1">{item.label}</p>
                   <p className="text-sm font-sans text-foreground">{item.value}</p>
                 </div>
               ))}
@@ -375,13 +377,13 @@ const AspinMarketplaceCaseStudy = () => {
                           border: bar.dashed ? `1px dashed ${bar.color}` : "none",
                         }}
                       >
-                        <span className="text-[10px] font-sans font-semibold text-white mix-blend-difference whitespace-nowrap">{bar.pct}%</span>
+                        <span className="text-xs font-sans font-semibold text-white mix-blend-difference whitespace-nowrap">{bar.pct}%</span>
                       </div>
                     </div>
                   </div>
                 ))}
               </div>
-              <p className="text-[10px] font-sans text-muted-foreground mt-4">Source: IRA H1 2025 · CBK · Allianz Global Insurance Report 2025</p>
+              <p className="text-xs font-sans text-muted-foreground mt-4">Source: IRA H1 2025 · CBK · Allianz Global Insurance Report 2025</p>
             </div>
           </Reveal>
 
@@ -637,7 +639,7 @@ const AspinMarketplaceCaseStudy = () => {
                   <div className="flex gap-1.5 flex-1">
                     {["Motor", "Health", "Home", "Travel", "Biz", "M-Pesa", "Cert"].map((label) => (
                       <div key={label} className="flex-1 text-center">
-                        <span className="text-[9px] font-sans text-muted-foreground">{label}</span>
+                        <span className="text-[11px] font-sans text-muted-foreground">{label}</span>
                       </div>
                     ))}
                   </div>
@@ -651,7 +653,7 @@ const AspinMarketplaceCaseStudy = () => {
                   ].map((l) => (
                     <div key={l.label} className="flex items-center gap-1.5">
                       <div className="w-3 h-3 rounded-sm" style={{ background: l.color }} />
-                      <span className="text-[9px] font-sans text-muted-foreground">{l.label}</span>
+                      <span className="text-[11px] font-sans text-muted-foreground">{l.label}</span>
                     </div>
                   ))}
                 </div>
@@ -685,7 +687,7 @@ const AspinMarketplaceCaseStudy = () => {
                       {row.name}
                     </td>
                     {row.values.map((v, i) => (
-                      <td key={i} className={`text-center py-3 px-2 ${v === "✓" || v === "Deep" || v === "Instant" || v === "Fast" ? (row.highlight ? "text-primary font-semibold" : "text-foreground") : v === "—" ? "text-muted-foreground/30" : "text-muted-foreground"}`}>
+                      <td key={i} className={`text-center py-3 px-2 ${v === "✓" || v === "Deep" || v === "Instant" || v === "Fast" ? (row.highlight ? "text-primary font-semibold" : "text-foreground") : "text-muted-foreground"}`}>
                         {v}
                       </td>
                     ))}
@@ -763,7 +765,7 @@ const AspinMarketplaceCaseStudy = () => {
                 <div className="rounded-lg border border-primary/20 bg-card p-6 md:p-8">
                   <div className="flex flex-wrap items-start gap-4 mb-4">
                     <h3 className="text-xl font-serif text-foreground">{v.label}</h3>
-                    <span className={`text-[10px] font-sans font-medium tracking-[0.1em] uppercase px-2 py-1 rounded ${v.tagColor}`}>{v.tag}</span>
+                    <span className={`text-xs font-sans font-medium tracking-[0.1em] uppercase px-2 py-1 rounded ${v.tagColor}`}>{v.tag}</span>
                     <span className="ml-auto text-lg font-serif text-primary">{v.price}</span>
                   </div>
                   <p className="text-base font-sans text-muted-foreground leading-relaxed mb-4">{v.text}</p>
@@ -817,7 +819,7 @@ const AspinMarketplaceCaseStudy = () => {
                         <p className="text-sm font-sans font-semibold text-foreground leading-tight">{stage.label}</p>
                         <p className="text-xs font-sans text-muted-foreground leading-relaxed">{stage.sub}</p>
                       </div>
-                      <span className="text-[10px] font-sans font-medium tracking-[0.1em] uppercase text-primary shrink-0">{stage.step}</span>
+                      <span className="text-xs font-sans font-medium tracking-[0.1em] uppercase text-primary shrink-0">{stage.step}</span>
                     </div>
                     {i < 3 && (
                       <div className="w-px h-4 bg-border" />
@@ -841,7 +843,7 @@ const AspinMarketplaceCaseStudy = () => {
                       : "border-border bg-card hover:border-primary/30"
                   }`}
                 >
-                  <p className={`text-2xl font-serif mb-2 transition-colors ${activeStep === i ? "text-primary" : "text-muted-foreground/40"}`}>{s.step}</p>
+                  <p className={`text-2xl font-serif mb-2 transition-colors ${activeStep === i ? "text-primary" : "text-muted-foreground/70"}`}>{s.step}</p>
                   <p className="text-sm font-sans font-semibold text-foreground mb-1">{s.title}</p>
                   <p className="text-xs font-sans text-muted-foreground">{s.subtitle}</p>
                 </button>
@@ -861,7 +863,7 @@ const AspinMarketplaceCaseStudy = () => {
                     pointerEvents: activeStep === i ? "auto" : "none",
                   }}
                 >
-                  <p className="text-[10px] font-sans font-medium tracking-[0.15em] uppercase text-primary mb-2">Step {s.step}</p>
+                  <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-2">Step {s.step}</p>
                   <h3 className="text-lg font-serif text-foreground mb-3">{s.title}</h3>
                   <p className="text-sm font-sans text-muted-foreground leading-relaxed">{s.detail}</p>
                 </div>
@@ -909,7 +911,7 @@ const AspinMarketplaceCaseStudy = () => {
                   <div className="flex gap-0 mb-3">
                     {["Landing page", "Quote form", "Results page", "Checkout", "Post-purchase"].map((stage) => (
                       <div key={stage} className="flex-1 text-center px-1">
-                        <span className="text-[10px] font-sans font-medium tracking-[0.05em] uppercase text-muted-foreground leading-tight block">{stage}</span>
+                        <span className="text-xs font-sans font-medium tracking-[0.05em] uppercase text-muted-foreground leading-tight block">{stage}</span>
                       </div>
                     ))}
                   </div>
@@ -925,7 +927,7 @@ const AspinMarketplaceCaseStudy = () => {
                       {row.stages.map((active, i) => (
                         <div key={i} className="flex-1 flex justify-center px-1">
                           <div
-                            className="w-full h-7 rounded flex items-center justify-center text-[10px] font-sans font-medium transition-all"
+                            className="w-full h-7 rounded flex items-center justify-center text-xs font-sans font-medium transition-all"
                             style={{
                               background: active ? "hsl(var(--primary) / 0.15)" : "hsl(var(--muted))",
                               color: active ? "hsl(var(--primary))" : "transparent",
@@ -936,7 +938,7 @@ const AspinMarketplaceCaseStudy = () => {
                           </div>
                         </div>
                       ))}
-                      <span className="text-[10px] font-sans text-muted-foreground ml-3 w-24 shrink-0">{row.label}</span>
+                      <span className="text-xs font-sans text-muted-foreground ml-3 w-24 shrink-0">{row.label}</span>
                     </div>
                   ))}
                 </div>

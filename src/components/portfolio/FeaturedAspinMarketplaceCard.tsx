@@ -38,8 +38,8 @@ const FeaturedAspinMarketplaceCard = () => {
         <div className="p-8 md:p-10 flex flex-col justify-center">
           <div className="flex items-center gap-2 mb-4">
             <Star className="w-3.5 h-3.5 text-primary fill-primary" />
-            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-primary">
-              Featured Case Study
+            <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
+              Concept · Live staging
             </span>
           </div>
 
@@ -57,7 +57,7 @@ const FeaturedAspinMarketplaceCard = () => {
 
           <div className="flex flex-wrap gap-2 mb-6">
             {["Systems Thinking", "AI Research", "UX Design", "Fintech"].map((tag) => (
-              <span key={tag} className="text-[10px] font-sans font-medium tracking-[0.1em] uppercase text-muted-foreground border border-border rounded px-2 py-1">
+              <span key={tag} className="text-xs font-sans font-medium tracking-[0.1em] uppercase text-muted-foreground border border-border rounded px-2 py-1">
                 {tag}
               </span>
             ))}

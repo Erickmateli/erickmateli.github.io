@@ -6,7 +6,7 @@ export const GEO_CACHE_KEY = "portfolio_geo";
 
 export function useVisitNotification() {
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY)) return;
+    if (sessionStorage.getItem(SESSION_KEY) || !import.meta.env.VITE_EMAILJS_SERVICE_ID) return;
 
     const notify = async () => {
       try {

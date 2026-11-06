@@ -1,5 +1,6 @@
 import { ArrowDown } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
+import { RESUME_URL } from "@/lib/links";
 
 const HeroSection = () => {
   return (
@@ -39,7 +40,7 @@ const HeroSection = () => {
 
       <div className="space-y-8 animate-fade-up relative z-10">
         <p className="text-sm font-sans font-medium tracking-[0.2em] uppercase text-primary">
-          Portfolio
+          Erick Mateli · Product Designer
         </p>
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-[1.1] text-foreground">
           Product Designer with
@@ -53,15 +54,26 @@ const HeroSection = () => {
           UX, and frontend engineering to improve delivery speed, reduce
           complexity, and scale platforms across emerging markets.
         </p>
-        <div className="pt-8">
+        <div className="pt-8 flex flex-wrap items-center gap-6">
           <a
-            href="#about"
-            className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
-            onClick={() => trackEvent("scroll_to_explore_clicked")}
+            href="#work"
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-lg bg-primary text-primary-foreground text-sm font-sans font-medium hover:opacity-90 transition-opacity"
+            onClick={() => trackEvent("view_work_clicked")}
           >
-            Scroll to explore
-            <ArrowDown className="w-4 h-4 animate-bounce" />
+            View work
+            <ArrowDown className="w-4 h-4" aria-hidden="true" />
           </a>
+          {RESUME_URL && (
+            <a
+              href={RESUME_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
+              onClick={() => trackEvent("resume_clicked", { from: "hero" })}
+            >
+              Resume →
+            </a>
+          )}
         </div>
       </div>
     </section>

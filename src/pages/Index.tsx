@@ -1,3 +1,4 @@
+import { useDocumentTitle } from "@/hooks/use-document-title";
 import Navbar from "@/components/portfolio/Navbar";
 import HeroSection from "@/components/portfolio/HeroSection";
 import AboutSection from "@/components/portfolio/AboutSection";
@@ -7,8 +8,9 @@ import SkillsSection from "@/components/portfolio/SkillsSection";
 import ClosingSection from "@/components/portfolio/ClosingSection";
 
 const Index = () => {
+  useDocumentTitle();
   return (
-    <div className="min-h-screen bg-background">
+    <div id="top" className="min-h-screen bg-background">
       <Navbar />
       <main className="pt-14">
         <HeroSection />

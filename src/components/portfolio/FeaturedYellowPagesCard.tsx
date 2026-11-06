@@ -21,8 +21,8 @@ const FeaturedYellowPagesCard = () => {
         <div className="p-8 md:p-10 flex flex-col justify-center">
           <div className="flex items-center gap-2 mb-4">
             <Star className="w-3.5 h-3.5 text-primary fill-primary" />
-            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-primary">
-              Featured Case Study
+            <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
+              Shipped · 6 countries
             </span>
           </div>
 
@@ -41,15 +41,15 @@ const FeaturedYellowPagesCard = () => {
           <div className="flex gap-6 mb-6">
             <div>
               <p className="text-lg font-serif text-foreground font-medium">260%</p>
-              <p className="text-[10px] font-sans text-muted-foreground uppercase tracking-wider">User Growth</p>
+              <p className="text-xs font-sans text-muted-foreground uppercase tracking-wider">User Growth</p>
             </div>
             <div>
-              <p className="text-lg font-serif text-foreground font-medium">-9.35%</p>
-              <p className="text-[10px] font-sans text-muted-foreground uppercase tracking-wider">Bounce Rate</p>
+              <p className="text-lg font-serif text-foreground font-medium">33.8→24.4%</p>
+              <p className="text-xs font-sans text-muted-foreground uppercase tracking-wider">Bounce Rate</p>
             </div>
             <div>
               <p className="text-lg font-serif text-foreground font-medium">6</p>
-              <p className="text-[10px] font-sans text-muted-foreground uppercase tracking-wider">Countries</p>
+              <p className="text-xs font-sans text-muted-foreground uppercase tracking-wider">Countries</p>
             </div>
           </div>
 

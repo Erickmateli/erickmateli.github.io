@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowRight, Star } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
-import aspinAfterShowcase from "@/assets/aspin-after-showcase.png";
+import aspinAfterShowcase from "@/assets/aspin-after-showcase.webp";
 
 const FeaturedCaseStudyCard = () => {
   return (
@@ -13,7 +13,7 @@ const FeaturedCaseStudyCard = () => {
             src={aspinAfterShowcase}
             alt="ASPIN Platform Redesign"
             className="w-full h-full object-cover object-top"
-            loading="lazy"
+            loading="eager"
           />
         </div>
 
@@ -21,8 +21,8 @@ const FeaturedCaseStudyCard = () => {
         <div className="p-8 md:p-10 flex flex-col justify-center">
           <div className="flex items-center gap-2 mb-4">
             <Star className="w-3.5 h-3.5 text-primary fill-primary" />
-            <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-primary">
-              Featured Case Study
+            <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
+              Shipped · Multi-partner platform
             </span>
           </div>
 

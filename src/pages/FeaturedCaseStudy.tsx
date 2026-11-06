@@ -1,13 +1,14 @@
+import { useDocumentTitle } from "@/hooks/use-document-title";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
 import ImageLightbox from "@/components/portfolio/ImageLightbox";
 
-import aspinBeforeMobile from "@/assets/aspin-before-mobile.png";
-import aspinBeforeShowcase from "@/assets/aspin-before-showcase.png";
-import aspinBeforeDesktop from "@/assets/aspin-before-desktop.png";
-import aspinAfterShowcase from "@/assets/aspin-after-showcase.png";
+import aspinBeforeMobile from "@/assets/aspin-before-mobile.webp";
+import aspinBeforeShowcase from "@/assets/aspin-before-showcase.webp";
+import aspinBeforeDesktop from "@/assets/aspin-before-desktop.webp";
+import aspinAfterShowcase from "@/assets/aspin-after-showcase.webp";
 import aspinBeforeInteriorCustomer from "@/assets/aspin-before-interior-customer.png";
 import aspinBeforeInteriorClaims from "@/assets/aspin-before-interior-claims.png";
 import aspinAfterInteriorProfile from "@/assets/aspin-after-interior-profile.png";
@@ -38,6 +39,7 @@ const afterInteriorImages = [
 const allImages = [...beforeImages, ...beforeInteriorImages, ...afterImages, ...afterInteriorImages];
 
 const FeaturedCaseStudy = () => {
+  useDocumentTitle("ASPIN Platform Redesign");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
@@ -52,7 +54,7 @@ const FeaturedCaseStudy = () => {
             <ArrowLeft className="w-4 h-4" />
             Back to portfolio
           </Link>
-          <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-primary">
+          <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
             Featured Case Study
           </span>
         </div>
@@ -61,7 +63,7 @@ const FeaturedCaseStudy = () => {
       <main className="pt-14">
         {/* ───────── Hero ───────── */}
         <section className="py-20 md:py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <span className="text-[10px] font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
+          <span className="text-xs font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
             Featured · Case Study
           </span>
           <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-[1.1] mb-6">

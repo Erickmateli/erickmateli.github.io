@@ -57,7 +57,7 @@ const CaseStudyDetail = () => {
       <main className="pt-14">
         {/* Hero */}
         <section className="py-16 md:py-24 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <span className="text-[10px] font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
+          <span className="text-xs font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
             Case Study · {study.subtitle}
           </span>
           <h1 className="text-3xl md:text-5xl font-serif text-foreground leading-tight mb-3">

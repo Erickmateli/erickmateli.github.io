@@ -1,3 +1,4 @@
+import { useDocumentTitle } from "@/hooks/use-document-title";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
@@ -7,8 +8,8 @@ import ImageLightbox from "@/components/portfolio/ImageLightbox";
 import ypBeforeHomepage from "@/assets/yp-before-homepage.jpg";
 import ypAfterShowcase from "@/assets/yp-after-showcase.jpg";
 import ypWireframes from "@/assets/yp-wireframes.png";
-import ypAnalytics2018 from "@/assets/yp-analytics-2018.png";
-import ypAnalytics2020 from "@/assets/yp-analytics-2020.png";
+import ypAnalytics2018 from "@/assets/yp-analytics-2018.webp";
+import ypAnalytics2020 from "@/assets/yp-analytics-2020.webp";
 
 const beforeImages = [
   { src: ypBeforeHomepage, alt: "Yellow Pages Kenya — Original Homepage" },
@@ -30,6 +31,7 @@ const analyticsImages = [
 const allImages = [...beforeImages, ...afterImages, ...processImages, ...analyticsImages];
 
 const YellowPagesCaseStudy = () => {
+  useDocumentTitle("Yellow Pages Kenya Redesign");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
   return (
@@ -44,7 +46,7 @@ const YellowPagesCaseStudy = () => {
             <ArrowLeft className="w-4 h-4" />
             Back to portfolio
           </Link>
-          <span className="text-[10px] font-sans font-medium tracking-[0.2em] uppercase text-primary">
+          <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
             Case Study
           </span>
         </div>
@@ -53,7 +55,7 @@ const YellowPagesCaseStudy = () => {
       <main className="pt-14">
         {/* ───────── Hero ───────── */}
         <section className="py-20 md:py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <span className="text-[10px] font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
+          <span className="text-xs font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
             Case Study · Yellow Pages
           </span>
           <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-[1.1] mb-6">

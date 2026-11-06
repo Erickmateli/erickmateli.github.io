@@ -1,4 +1,5 @@
 import { trackEvent } from "@/lib/track-event";
+import { EMAIL, LINKEDIN_URL, RESUME_URL } from "@/lib/links";
 
 const ClosingSection = () => {
   return (
@@ -27,21 +28,48 @@ const ClosingSection = () => {
         </p>
         <div className="flex flex-col sm:flex-row items-center justify-center gap-8 mb-12">
           <div className="text-center sm:text-left">
-            <p className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1">Phone</p>
-            <a href="tel:+254716435830" className="font-sans text-foreground hover:text-primary transition-colors">
-              (+254) 716 435 830
-            </a>
-          </div>
-          <div className="hidden sm:block w-px h-8 bg-border" />
-          <div className="text-center sm:text-left">
             <p className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1">Email</p>
-            <a href="mailto:matelierick@gmail.com" className="font-sans text-foreground hover:text-primary transition-colors">
-              matelierick@gmail.com
+            <a href={`mailto:${EMAIL}`} className="font-sans text-foreground hover:text-primary transition-colors">
+              {EMAIL}
             </a>
           </div>
+          {LINKEDIN_URL && (
+            <>
+              <div className="hidden sm:block w-px h-8 bg-border" />
+              <div className="text-center sm:text-left">
+                <p className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1">LinkedIn</p>
+                <a
+                  href={LINKEDIN_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-sans text-foreground hover:text-primary transition-colors"
+                  onClick={() => trackEvent("linkedin_clicked")}
+                >
+                  Connect on LinkedIn
+                </a>
+              </div>
+            </>
+          )}
+          {RESUME_URL && (
+            <>
+              <div className="hidden sm:block w-px h-8 bg-border" />
+              <div className="text-center sm:text-left">
+                <p className="text-xs font-sans uppercase tracking-widest text-muted-foreground mb-1">Resume</p>
+                <a
+                  href={RESUME_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="font-sans text-foreground hover:text-primary transition-colors"
+                  onClick={() => trackEvent("resume_clicked", { from: "contact" })}
+                >
+                  Download PDF
+                </a>
+              </div>
+            </>
+          )}
         </div>
         <a
-          href="mailto:matelierick@gmail.com"
+          href={`mailto:${EMAIL}`}
           className="inline-flex items-center justify-center px-8 py-3 rounded-lg bg-primary text-primary-foreground font-sans text-sm font-medium hover:opacity-90 transition-opacity"
           onClick={() => trackEvent("get_in_touch_clicked")}
         >
