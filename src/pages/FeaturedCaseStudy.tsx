@@ -8,12 +8,15 @@ import ImageLightbox from "@/components/portfolio/ImageLightbox";
 import aspinBeforeMobile from "@/assets/aspin-before-mobile.webp";
 import aspinBeforeShowcase from "@/assets/aspin-before-showcase.webp";
 import aspinBeforeDesktop from "@/assets/aspin-before-desktop.webp";
-import aspinAfterShowcase from "@/assets/aspin-after-showcase.webp";
 import aspinBeforeInteriorCustomer from "@/assets/aspin-before-interior-customer.png";
 import aspinBeforeInteriorClaims from "@/assets/aspin-before-interior-claims.png";
-import aspinAfterInteriorProfile from "@/assets/aspin-after-interior-profile.png";
-import aspinAfterInteriorPolicies from "@/assets/aspin-after-interior-policies.png";
-import aspinAfterInteriorClaims from "@/assets/aspin-after-interior-claims.png";
+import afterScreening from "@/assets/aspin-plus/aspin-plus-policy-screening.webp";
+import afterWebsiteHero from "@/assets/aspin-plus/aspin-plus-website-hero.webp";
+import afterWebsiteProducts from "@/assets/aspin-plus/aspin-plus-website-products.webp";
+import afterProfile from "@/assets/aspin-plus/aspin-plus-customer-profile.webp";
+import afterClaims from "@/assets/aspin-plus/aspin-plus-claims-queue.webp";
+import afterKnowledgeBase from "@/assets/aspin-plus/aspin-plus-knowledge-base.webp";
+import afterLogin from "@/assets/aspin-plus/aspin-plus-login.webp";
 
 const beforeImages = [
   { src: aspinBeforeDesktop, alt: "ASPIN Desktop — Before Redesign" },
@@ -26,17 +29,21 @@ const beforeInteriorImages = [
   { src: aspinBeforeInteriorClaims, alt: "Claims Dashboard — Before Redesign" },
 ];
 
-const afterImages = [
-  { src: aspinAfterShowcase, alt: "ASPIN Redesigned Landing Page — Multi-Device" },
-];
+const afterLead = {
+  src: afterWebsiteHero,
+  alt: "ASPIN website — explained in one line for insurers, banks and telcos",
+};
 
 const afterInteriorImages = [
-  { src: aspinAfterInteriorProfile, alt: "Customer Profile — After Redesign" },
-  { src: aspinAfterInteriorPolicies, alt: "Customer Policies — After Redesign" },
-  { src: aspinAfterInteriorClaims, alt: "Claims Dashboard — After Redesign" },
+  { src: afterScreening, alt: "Policy screening — an approval journey showing every stage and the next decision" },
+  { src: afterProfile, alt: "Customer profile — personal, contact and account details grouped" },
+  { src: afterClaims, alt: "Claims as work queues — each tab is a stage operators act on" },
+  { src: afterWebsiteProducts, alt: "Two operating models — Aspin Simple and Aspin Plus on one platform" },
+  { src: afterKnowledgeBase, alt: "Knowledge base — guides that appear on the pages they're tagged for" },
+  { src: afterLogin, alt: "Sign-in — consistent with the marketing site" },
 ];
 
-const allImages = [...beforeImages, ...beforeInteriorImages, ...afterImages, ...afterInteriorImages];
+const allImages = [...beforeImages, ...beforeInteriorImages, afterLead, ...afterInteriorImages];
 
 const FeaturedCaseStudy = () => {
   useDocumentTitle("ASPIN Platform Redesign");
@@ -231,8 +238,8 @@ const FeaturedCaseStudy = () => {
               My Role
             </p>
             <p className="text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
-              I stepped in as <span className="text-foreground font-medium">Frontend Tech Lead</span>,
-              working across UX and product design. I was responsible for improving the experience
+              As <span className="text-foreground font-medium">Senior Product Designer</span>, reporting to
+              the CPO, I held a dual role: UX strategy and frontend delivery. I was responsible for improving the experience
               end-to-end — from understanding what was broken, to redesigning workflows, to
               implementing changes in code. This wasn't a handoff role — I owned the thinking
               and the execution.
@@ -340,31 +347,34 @@ const FeaturedCaseStudy = () => {
           <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-6">
             After — The Redesigned Experience
           </p>
+          <p className="text-xs font-sans text-muted-foreground -mt-4 mb-6">
+            Personal and partner details are blurred for privacy.
+          </p>
           <button
             onClick={() => setLightboxIndex(beforeImages.length + beforeInteriorImages.length)}
-            className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left w-full max-w-3xl mb-8"
+            className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left w-full mb-8"
           >
-            <div className="aspect-[16/10] overflow-hidden">
+            <div className="overflow-hidden">
               <img
-                src={aspinAfterShowcase}
-                alt="ASPIN Redesigned Landing Page"
-                className="w-full h-full object-cover object-top group-hover:scale-[1.02] transition-transform duration-300"
+                src={afterLead.src}
+                alt={afterLead.alt}
+                className="w-full h-auto group-hover:scale-[1.02] transition-transform duration-300"
                 loading="lazy"
               />
             </div>
             <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
-              ASPIN Redesigned Landing Page — Multi-Device Preview
+              {afterLead.alt}
             </p>
           </button>
 
           <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-6">
             After — Inside the Redesigned Platform
           </p>
-          <div className="grid md:grid-cols-3 gap-4">
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {afterInteriorImages.map((img, i) => (
               <button
                 key={i}
-                onClick={() => setLightboxIndex(beforeImages.length + beforeInteriorImages.length + afterImages.length + i)}
+                onClick={() => setLightboxIndex(beforeImages.length + beforeInteriorImages.length + 1 + i)}
                 className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
               >
                 <div className="aspect-[16/10] overflow-hidden">
@@ -505,9 +515,9 @@ const FeaturedCaseStudy = () => {
               Key Takeaway
             </p>
             <p className="text-lg md:text-xl font-serif text-foreground leading-relaxed">
-              I don't just design or build features — I step into complex product environments,
-              identify what's breaking trust, and realign delivery, UX, and engineering
-              to restore momentum.
+              Complex platforms rarely need more features — they need a structure people can
+              understand. Organising ASPIN around real tasks instead of database tables is what
+              made it usable at the scale of 5 million customers across 11 countries.
             </p>
           </div>
         </section>

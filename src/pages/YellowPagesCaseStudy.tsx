@@ -169,7 +169,7 @@ const YellowPagesCaseStudy = () => {
               My Role
             </p>
             <p className="text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
-              I led this project as <span className="text-foreground font-medium">UX Design Lead and Frontend Developer</span>,
+              I led this project as <span className="text-foreground font-medium">Lead UX Designer</span>, also building the frontend prototype,
               working with a cross-functional team spanning design, development, and content.
               I was responsible for rethinking the core user journeys, redesigning the interface,
               and building a code-based prototype that could be tested with real interactions
@@ -573,9 +573,9 @@ const YellowPagesCaseStudy = () => {
               Key Takeaway
             </p>
             <p className="text-lg md:text-xl font-serif text-foreground leading-relaxed">
-              I don't just redesign interfaces — I rethink how products serve their users.
-              From 472K to 1.7M users, this project proved that clarity, speed, and user-centered
-              thinking drive measurable business impact.
+              People came to find a business, not to browse a directory. Designing every screen
+              around that one intent is what took Yellow Pages from 472K to 1.7M users — and cut
+              the bounce rate from 33.8% to 24.4%.
             </p>
           </div>
         </section>

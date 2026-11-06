@@ -40,7 +40,7 @@ const HeroSection = () => {
 
       <div className="space-y-8 animate-fade-up relative z-10">
         <p className="text-sm font-sans font-medium tracking-[0.2em] uppercase text-primary">
-          Erick Mateli · Product Designer
+          Erick Mateli<span className="hidden sm:inline"> · Senior Product Designer</span>
         </p>
         <h1 className="text-4xl md:text-6xl lg:text-7xl font-serif leading-[1.1] text-foreground">
           Product Designer with
@@ -50,10 +50,25 @@ const HeroSection = () => {
           Background
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed font-sans font-light">
-          Designing scalable partner-driven platforms. I combine product design,
-          UX, and frontend engineering to improve delivery speed, reduce
-          complexity, and scale platforms across emerging markets.
+          I design complex, multi-partner platforms — from fintech and insurance to
+          search — combining product design, UX, and frontend engineering to reduce
+          complexity and ship faster.
         </p>
+        <dl className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl pt-2">
+          {[
+            { value: "7+", label: "Years in product design" },
+            { value: "5M+", label: "End users reached" },
+            { value: "11", label: "Countries" },
+            { value: "10+", label: "Partners launched" },
+          ].map((stat) => (
+            <div key={stat.label} className="flex flex-col-reverse border-l-2 border-primary/30 pl-4">
+              <dt className="text-xs font-sans text-muted-foreground uppercase tracking-wider mt-1">
+                {stat.label}
+              </dt>
+              <dd className="text-2xl md:text-3xl font-serif text-foreground">{stat.value}</dd>
+            </div>
+          ))}
+        </dl>
         <div className="pt-8 flex flex-wrap items-center gap-6">
           <a
             href="#work"

@@ -1,19 +1,27 @@
 const steps = [
   {
+    years: "2017 – 2018",
+    label: "Web Designer & Developer",
+    company: "Africa 118",
+    description: "Designed and built e-commerce sites and web platforms for SMEs — learning to ship real products.",
+  },
+  {
+    years: "2018 – 2019",
     label: "Frontend Developer",
-    description: "Built interfaces, learned the language of engineering constraints.",
+    company: "Isobar (Dentsu Aegis Network)",
+    description: "Built responsive interfaces for multiple client brands, using analytics to guide UI improvements.",
   },
   {
-    label: "UX Designer",
-    description: "Shifted focus to user needs, research, and information architecture.",
+    years: "2019 – 2022",
+    label: "Lead UX Designer",
+    company: "Yellow Pages Kenya",
+    description: "Led the platform redesign — growing users from 472K to 1.7M and rolling out across six countries.",
   },
   {
-    label: "Product Designer",
-    description: "Connected business goals, user experience, and technical feasibility.",
-  },
-  {
-    label: "Platform Thinker",
-    description: "Designing scalable systems for partners, integrations, and growth.",
+    years: "2022 – Now",
+    label: "Senior Product Designer",
+    company: "Inclusivity Solutions",
+    description: "UX strategy and frontend delivery for ASPIN — 5M customers across 11 countries and 10+ partner rollouts.",
   },
 ];
 
@@ -33,10 +41,10 @@ const EvolutionSection = () => {
       </div>
 
       <p className="text-sm font-sans font-medium tracking-[0.2em] uppercase text-primary mb-4">
-        Evolution
+        Career
       </p>
       <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-16">
-        Growth <span className="italic text-primary">Timeline</span>
+        Where I've <span className="italic text-primary">worked</span>
       </h2>
       <div className="relative">
         <div className="absolute left-[7px] top-3 bottom-3 w-px bg-border md:left-1/2 md:-translate-x-px" />
@@ -58,7 +66,9 @@ const EvolutionSection = () => {
                   i % 2 === 0 ? "md:pr-16 md:text-right" : "md:pl-16"
                 }`}
               >
-                <h3 className="text-xl font-serif text-foreground">{step.label}</h3>
+                <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary">{step.years}</p>
+                <h3 className="text-xl font-serif text-foreground mt-1">{step.label}</h3>
+                <p className="text-sm font-sans font-medium text-foreground/80">{step.company}</p>
                 <p className="text-sm text-muted-foreground font-sans mt-1 leading-relaxed">
                   {step.description}
                 </p>

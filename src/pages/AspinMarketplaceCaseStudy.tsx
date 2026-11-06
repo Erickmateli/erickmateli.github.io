@@ -3,6 +3,17 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
+import ImageLightbox from "@/components/portfolio/ImageLightbox";
+import mp01 from "@/assets/marketplace/marketplace-01-home.webp";
+import mp02 from "@/assets/marketplace/marketplace-02-product.webp";
+import mp03 from "@/assets/marketplace/marketplace-03-vehicle-form.webp";
+import mp04 from "@/assets/marketplace/marketplace-04-quotes.webp";
+import mp05 from "@/assets/marketplace/marketplace-05-payment-plan.webp";
+import mp06 from "@/assets/marketplace/marketplace-06-sign-in.webp";
+import mp07 from "@/assets/marketplace/marketplace-07-otp.webp";
+import mp08 from "@/assets/marketplace/marketplace-08-documents.webp";
+import mp09 from "@/assets/marketplace/marketplace-09-payment.webp";
+import mp10 from "@/assets/marketplace/marketplace-10-confirmation.webp";
 
 // ─── Scroll-reveal hook ───────────────────────────────────────────────────────
 function useReveal() {
@@ -227,7 +238,21 @@ const TRUST_ITEMS = [
   { title: "Post-purchase claims information", text: "The confirmation email includes the claims process, emergency contacts, and policy summary — the most under-designed moment in Kenyan insurance." },
 ];
 
+const walkthrough = [
+  { src: mp01, alt: "Landing page — five product lines, plus cover offered inside everyday banking moments" },
+  { src: mp02, alt: "Product page — what's covered, what isn't, and real price anchors before any form" },
+  { src: mp03, alt: "Vehicle form — usage and cover type first, contact details last" },
+  { src: mp04, alt: "Quotes — insurers side by side on the same sum insured, add-ons visible" },
+  { src: mp05, alt: "Payment plan — pay in full, by instalment, or with premium financing" },
+  { src: mp06, alt: "Sign-in — the customer's existing bank identity, no new password" },
+  { src: mp07, alt: "Verification — masked identity details confirm the right account" },
+  { src: mp08, alt: "Documents — three uploads, each one explained" },
+  { src: mp09, alt: "Payment — M-Pesa, Airtel Money, card or bank account" },
+  { src: mp10, alt: "Confirmation — policy number, documents and what happens next" },
+];
+
 const AspinMarketplaceCaseStudy = () => {
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   useDocumentTitle("ASPIN Marketplace Concept");
   // Reading progress
   const [progress, setProgress] = useState(0);
@@ -309,7 +334,7 @@ const AspinMarketplaceCaseStudy = () => {
           <div className="px-6 md:px-12 lg:px-24 max-w-5xl mx-auto pb-16">
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-b border-border py-8">
               {[
-                { label: "Role", value: "Product Designer & UX Frontend" },
+                { label: "Role", value: "Senior Product Designer · UX & Frontend" },
                 { label: "Market", value: "Kenya, East Africa" },
                 { label: "Stage", value: "Concept — AI Research Phase" },
                 { label: "Method", value: "AI Research + Systems Thinking" },
@@ -883,6 +908,54 @@ const AspinMarketplaceCaseStudy = () => {
 
         <div className="border-t border-border" />
 
+        {/* ───────── Staging walkthrough ───────── */}
+        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+          <Reveal className="max-w-3xl mb-10">
+            <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
+              The staging build
+            </p>
+            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-snug mb-4">
+              From landing page to active policy, in ten screens.
+            </h2>
+            <p className="text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
+              The motor journey as built on staging — the same funnel as above, now real: price
+              anchors before the form, quotes side by side, bank sign-in to skip retyping, and
+              mobile money at checkout.
+            </p>
+            <p className="text-xs font-sans text-muted-foreground mt-4">
+              Staging screens with sample data. Personal details are blurred for privacy.
+            </p>
+          </Reveal>
+
+          <div className="grid sm:grid-cols-2 gap-4">
+            {walkthrough.map((img, i) => (
+              <button
+                key={img.alt}
+                onClick={() => {
+                  setLightboxIndex(i);
+                  trackEvent("walkthrough_screen_opened", { case_study: "aspin-marketplace", screen: i + 1 });
+                }}
+                className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
+              >
+                <div className="aspect-[16/10] overflow-hidden">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
+                  <span className="font-medium text-primary mr-1.5">{String(i + 1).padStart(2, "0")}</span>
+                  {img.alt}
+                </p>
+              </button>
+            ))}
+          </div>
+        </section>
+
+        <div className="border-t border-border" />
+
         {/* ───────── 08 Trust Design — Interactive cards ───────── */}
         <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
@@ -1105,6 +1178,15 @@ const AspinMarketplaceCaseStudy = () => {
           </Link>
         </section>
       </main>
+
+      {lightboxIndex !== null && (
+        <ImageLightbox
+          images={walkthrough}
+          currentIndex={lightboxIndex}
+          onClose={() => setLightboxIndex(null)}
+          onNavigate={setLightboxIndex}
+        />
+      )}
     </div>
   );
 };

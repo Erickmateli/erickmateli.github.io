@@ -1,23 +1,26 @@
+import { Link } from "react-router-dom";
+import { ArrowRight } from "lucide-react";
+
 const skillGroups = [
   {
-    category: "Product Design",
-    skills: ["User flows & journey mapping", "Systems thinking", "Usability & accessibility", "Interaction design"],
-  },
-  {
-    category: "UX Research & Validation",
-    skills: ["Stakeholder interviews", "Usability testing", "Data-informed design", "Partner feedback loops"],
-  },
-  {
-    category: "Frontend Engineering",
-    skills: ["React & Next.js", "TypeScript", "Component architecture", "Performance optimization"],
+    category: "Product & UX Design",
+    skills: ["Design thinking & UX strategy", "Information architecture & journey mapping", "Prototyping & usability testing"],
+    proof: { label: "See Yellow Pages Kenya", to: "/case-study/yellow-pages" },
   },
   {
     category: "Design Systems",
-    skills: ["Token-based systems", "Component libraries", "Documentation", "Cross-team adoption"],
+    skills: ["Token-based component libraries", "50+ standardised components", "Per-partner theming without forks"],
+    proof: { label: "See ASPIN", to: "/case-study/aspin" },
   },
   {
-    category: "Platform Strategy",
-    skills: ["Embeddable architectures", "Partner integrations", "API-first design", "Multi-market scaling"],
+    category: "Frontend Engineering",
+    skills: ["React, Next.js & TypeScript", "Component architecture", "Taking designs to production"],
+    proof: { label: "See ASPIN", to: "/case-study/aspin" },
+  },
+  {
+    category: "Systems Thinking",
+    skills: ["Multi-partner, multi-market platforms", "Regulatory & trust design", "Research synthesis"],
+    proof: { label: "See ASPIN Marketplace", to: "/case-study/aspin-marketplace" },
   },
 ];
 
@@ -48,9 +51,9 @@ const SkillsSection = () => {
         <h2 className="text-3xl md:text-4xl font-serif text-foreground mb-16">
           Skills & Expertise
         </h2>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
           {skillGroups.map((group) => (
-            <div key={group.category}>
+            <div key={group.category} className="flex flex-col">
               <h3 className="text-base font-serif text-foreground mb-3">{group.category}</h3>
               <ul className="space-y-2">
                 {group.skills.map((skill) => (
@@ -63,6 +66,13 @@ const SkillsSection = () => {
                   </li>
                 ))}
               </ul>
+              <Link
+                to={group.proof.to}
+                className="inline-flex items-center gap-1.5 mt-auto pt-4 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
+              >
+                {group.proof.label}
+                <ArrowRight className="w-3.5 h-3.5" aria-hidden="true" />
+              </Link>
             </div>
           ))}
         </div>

@@ -23,6 +23,14 @@ function PostHogPageView() {
   useEffect(() => {
     posthog.capture("$pageview");
   }, [location]);
+
+  useEffect(() => {
+    if (location.hash) {
+      document.getElementById(location.hash.slice(1))?.scrollIntoView();
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [location.pathname, location.hash]);
   return null;
 }
 
