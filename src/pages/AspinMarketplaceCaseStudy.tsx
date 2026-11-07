@@ -1,8 +1,11 @@
 import { useDocumentTitle } from "@/hooks/use-document-title";
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
+import Reveal from "@/components/case-study/Reveal";
+import { useCounter } from "@/components/case-study/motion";
+import ReadingProgress from "@/components/case-study/ReadingProgress";
 import CaseStudySummary from "@/components/portfolio/CaseStudySummary";
 import CaseStudyEnd from "@/components/portfolio/CaseStudyEnd";
 import ImageLightbox from "@/components/portfolio/ImageLightbox";
@@ -17,75 +20,11 @@ import mp08 from "@/assets/marketplace/marketplace-08-documents.webp";
 import mp09 from "@/assets/marketplace/marketplace-09-payment.webp";
 import mp10 from "@/assets/marketplace/marketplace-10-confirmation.webp";
 
-// ─── Scroll-reveal hook ───────────────────────────────────────────────────────
-function useReveal() {
-  const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setVisible(true); obs.disconnect(); } },
-      { threshold: 0.12 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, []);
-  return { ref, visible };
-}
-
-// ─── Animated counter hook ────────────────────────────────────────────────────
-function useCounter(target: number, suffix: string, decimals = 0, duration = 1400) {
-  const [display, setDisplay] = useState("0");
-  const ref = useRef<HTMLSpanElement>(null);
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry.isIntersecting) return;
-        obs.disconnect();
-        const start = performance.now();
-        const tick = (now: number) => {
-          const pct = Math.min((now - start) / duration, 1);
-          const ease = 1 - Math.pow(1 - pct, 3);
-          const val = ease * target;
-          setDisplay(decimals > 0 ? val.toFixed(decimals) : Math.round(val).toString());
-          if (pct < 1) requestAnimationFrame(tick);
-        };
-        requestAnimationFrame(tick);
-      },
-      { threshold: 0.5 }
-    );
-    obs.observe(el);
-    return () => obs.disconnect();
-  }, [target, suffix, decimals, duration]);
-  return { ref, display };
-}
-
-// ─── Reveal wrapper ───────────────────────────────────────────────────────────
-function Reveal({ children, delay = 0, className = "" }: { children: React.ReactNode; delay?: number; className?: string }) {
-  const { ref, visible } = useReveal();
-  return (
-    <div
-      ref={ref}
-      className={className}
-      style={{
-        opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(24px)",
-        transition: `opacity 0.6s ease ${delay}ms, transform 0.6s ease ${delay}ms`,
-      }}
-    >
-      {children}
-    </div>
-  );
-}
-
 // ─── Stat card with animated counter ─────────────────────────────────────────
 function StatCard({ stat, label, isNumber = false, target = 0, suffix = "", decimals = 0 }: {
   stat: string; label: string; isNumber?: boolean; target?: number; suffix?: string; decimals?: number;
 }) {
-  const { ref, display } = useCounter(target, suffix, decimals);
+  const { ref, display } = useCounter(target, decimals);
   return (
     <div className="p-5 rounded-lg border border-border bg-card hover:border-primary/40 hover:shadow-md transition-all duration-300 group">
       <p className="text-2xl md:text-3xl font-serif text-primary mb-1 group-hover:scale-105 transition-transform origin-left">
@@ -328,19 +267,6 @@ const walkthrough = [
 const AspinMarketplaceCaseStudy = () => {
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
   useDocumentTitle("ASPIN Marketplace Concept");
-  // Reading progress
-  const [progress, setProgress] = useState(0);
-  const handleScroll = useCallback(() => {
-    const el = document.documentElement;
-    const scrolled = el.scrollTop;
-    const total = el.scrollHeight - el.clientHeight;
-    setProgress(total > 0 ? (scrolled / total) * 100 : 0);
-  }, []);
-  useEffect(() => {
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [handleScroll]);
-
   // Active vertical tab
   const [activeVertical, setActiveVertical] = useState(0);
 
@@ -366,11 +292,7 @@ const AspinMarketplaceCaseStudy = () => {
             Case study · Concept
           </span>
         </div>
-        {/* Reading progress bar */}
-        <div
-          className="absolute bottom-0 left-0 h-[2px] bg-primary transition-all duration-75"
-          style={{ width: `${progress}%` }}
-        />
+        <ReadingProgress />
       </nav>
 
       <main className="pt-14">

@@ -15,6 +15,9 @@ const FeaturedCaseStudy = lazy(() => import("./pages/FeaturedCaseStudy.tsx"));
 const YellowPagesCaseStudy = lazy(() => import("./pages/YellowPagesCaseStudy.tsx"));
 const AspinMarketplaceCaseStudy = lazy(() => import("./pages/AspinMarketplaceCaseStudy.tsx"));
 
+// Dev-only preview of the case study kit; Vite drops this from production builds.
+const CaseStudyKit = import.meta.env.DEV ? lazy(() => import("./pages/dev/CaseStudyKit.tsx")) : null;
+
 const queryClient = new QueryClient();
 
 function PostHogPageView() {
@@ -49,6 +52,7 @@ const App = () => (
           <Route path="/case-study/yellow-pages" element={<YellowPagesCaseStudy />} />
           <Route path="/case-study/aspin-marketplace" element={<AspinMarketplaceCaseStudy />} />
           <Route path="/case-study/:slug" element={<CaseStudyDetail />} />
+          {CaseStudyKit && <Route path="/dev/case-study-kit" element={<CaseStudyKit />} />}
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
