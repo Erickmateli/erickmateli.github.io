@@ -146,14 +146,14 @@ const tabs = [
   { id: "research", label: "Research" },
   { id: "system", label: "System" },
   { id: "design", label: "Design" },
-  { id: "staging", label: "Walkthrough" },
+  { id: "walkthrough", label: "Walkthrough" },
   { id: "learnings", label: "Learnings" },
 ] as const;
 type TabId = (typeof tabs)[number]["id"];
 
 // Old section links (from the previous scroll menu) still land on the right tab.
 const legacyHash: Record<string, TabId> = {
-  context: "overview", problem: "overview", competitors: "research", products: "design",
+  staging: "walkthrough", context: "overview", problem: "overview", competitors: "research", products: "design",
   journey: "design", trust: "design", reflections: "learnings", "next-steps": "learnings",
 };
 
@@ -1030,7 +1030,7 @@ const AspinMarketplaceCaseStudy = () => {
             </>
           )}
 
-          {activeTab === "staging" && (
+          {activeTab === "walkthrough" && (
             <>
         {/* ───────── Staging walkthrough ───────── */}
         <section id="staging-build" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
