@@ -21,7 +21,7 @@ const Index = () => {
         <ClosingSection />
       </main>
       <footer className="py-8 px-6 text-center text-xs text-muted-foreground font-sans border-t border-border">
-        © {new Date().getFullYear()} — Designed & built with intention.
+        <p>© {new Date().getFullYear()} Erick Mateli — Designed &amp; built with intention.</p>
       </footer>
     </div>
   );

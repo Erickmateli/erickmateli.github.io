@@ -1,9 +1,8 @@
-import posthog from "posthog-js";
-import emailjs from "@emailjs/browser";
+import { capture } from "@/lib/analytics";
 import { GEO_CACHE_KEY } from "@/hooks/use-visit-notification";
 
 export function trackEvent(name: string, properties?: Record<string, unknown>) {
-  posthog.capture(name, properties);
+  capture(name, properties);
 
   if (!import.meta.env.VITE_EMAILJS_SERVICE_ID) return;
 
@@ -17,8 +16,8 @@ export function trackEvent(name: string, properties?: Record<string, unknown>) {
             .join("\n")
         : "—";
 
-    emailjs
-      .send(
+    import("@emailjs/browser")
+      .then(({ default: emailjs }) => emailjs.send(
         import.meta.env.VITE_EMAILJS_SERVICE_ID,
         import.meta.env.VITE_EMAILJS_EVENT_TEMPLATE_ID,
         {
@@ -30,7 +29,7 @@ export function trackEvent(name: string, properties?: Record<string, unknown>) {
           time: new Date().toLocaleString("en-GB", { timeZone: "Africa/Nairobi" }),
         },
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY,
-      )
+      ))
       .catch(() => {
         // Silent fail — never affects visitor UX
       });

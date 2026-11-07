@@ -33,12 +33,15 @@ const CaseStudyEnd = ({ slug }: { slug: CaseStudySlug }) => {
               Building a complex product that needs to feel simple? Let's talk.
             </p>
             <div className="mt-auto flex flex-wrap items-center gap-x-6 gap-y-3 text-sm font-sans font-medium">
-              <a
-                href={`mailto:${EMAIL}`}
+              <Link
+                to="/#contact"
                 className="inline-flex items-center px-4 py-2 rounded-md bg-primary-foreground text-primary hover:opacity-90 transition-opacity"
                 onClick={() => trackEvent("get_in_touch_clicked", { from: slug })}
               >
-                Email me
+                Send a message
+              </Link>
+              <a href={`mailto:${EMAIL}`} className="underline underline-offset-4 hover:opacity-80">
+                Email
               </a>
               {LINKEDIN_URL && (
                 <a
@@ -77,7 +80,7 @@ const CaseStudyEnd = ({ slug }: { slug: CaseStudySlug }) => {
       </section>
 
       <footer className="py-8 px-6 text-center text-xs text-muted-foreground font-sans border-t border-border">
-        © {new Date().getFullYear()} Erick Mateli — Designed &amp; built with intention.
+        <p>© {new Date().getFullYear()} Erick Mateli — Designed &amp; built with intention.</p>
       </footer>
     </>
   );

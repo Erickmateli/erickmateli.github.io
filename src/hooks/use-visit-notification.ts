@@ -1,12 +1,11 @@
 import { useEffect } from "react";
-import emailjs from "@emailjs/browser";
 
 const SESSION_KEY = "portfolio_visit_notified";
 export const GEO_CACHE_KEY = "portfolio_geo";
 
 export function useVisitNotification() {
   useEffect(() => {
-    if (sessionStorage.getItem(SESSION_KEY) || !import.meta.env.VITE_EMAILJS_SERVICE_ID) return;
+    if (sessionStorage.getItem(SESSION_KEY) || !import.meta.env.VITE_EMAILJS_SERVICE_ID || navigator.webdriver) return;
 
     const notify = async () => {
       try {
@@ -22,6 +21,7 @@ export function useVisitNotification() {
           }),
         );
 
+        const { default: emailjs } = await import("@emailjs/browser");
         await emailjs.send(
           import.meta.env.VITE_EMAILJS_SERVICE_ID,
           import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
