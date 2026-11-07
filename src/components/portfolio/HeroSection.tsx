@@ -50,9 +50,8 @@ const HeroSection = () => {
           Background
         </h1>
         <p className="text-lg md:text-xl text-muted-foreground max-w-2xl leading-relaxed font-sans font-light">
-          I design complex, multi-partner platforms — from fintech and insurance to
-          search — combining product design, UX, and frontend engineering to reduce
-          complexity and ship faster.
+          I make complex products feel simple — combining product design, UX and
+          frontend engineering to take ideas from messy systems to shipped experiences.
         </p>
         <dl className="grid grid-cols-2 sm:grid-cols-4 gap-6 max-w-2xl pt-2">
           {[

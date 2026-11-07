@@ -35,22 +35,19 @@ const AboutSection = () => {
         </div>
         <div className="space-y-6 text-muted-foreground font-sans leading-relaxed">
           <p>
-            My career has been a deliberate evolution — from frontend developer to UX
-            designer, then product designer, and now a platform thinker. Each phase
-            built on the last, giving me a rare ability to bridge engineering
-            constraints with user needs and business strategy.
+            I started as a frontend developer, moved into UX, and grew into product design — so I
+            design with an engineer's understanding of what it takes to build and ship.
           </p>
           <p>
-            I've spent years working across multiple African markets, navigating the
-            complexity of partner integrations in fintech and insurtech. This
-            experience taught me that great product design isn't just about
-            interfaces — it's about understanding systems, stakeholders, and the
-            real-world friction that users face.
+            Over 7+ years I've worked on products used across 11 countries: a business directory that
+            grew from 472K to 1.7M users, and an insurance platform now serving 5M customers through
+            banks, telcos and insurers. The common thread is complexity — many users, many partners,
+            and real-world constraints like slow connections and strict regulation.
           </p>
           <p>
-            Today, I focus on designing scalable platforms that serve partners and
-            end-users alike, always grounding my work in data, feasibility, and
-            measurable impact.
+            I'm at my best turning messy systems into products people find easy, and staying close
+            enough to the code to make sure what ships matches what was designed. I'm looking for
+            teams building ambitious products where design and engineering work as one.
           </p>
         </div>
       </div>
