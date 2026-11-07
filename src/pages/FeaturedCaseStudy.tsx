@@ -3,6 +3,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
+import CaseStudySummary from "@/components/portfolio/CaseStudySummary";
+import CaseStudyEnd from "@/components/portfolio/CaseStudyEnd";
 import ImageLightbox from "@/components/portfolio/ImageLightbox";
 
 import aspinBeforeMobile from "@/assets/aspin-before-mobile.webp";
@@ -62,7 +64,7 @@ const FeaturedCaseStudy = () => {
             Back to portfolio
           </Link>
           <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
-            Featured Case Study
+            Case study · Shipped
           </span>
         </div>
       </nav>
@@ -71,7 +73,7 @@ const FeaturedCaseStudy = () => {
         {/* ───────── Hero ───────── */}
         <section className="py-20 md:py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <span className="text-xs font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
-            Featured · Case Study
+            ASPIN · Inclusivity Solutions · 2022–now
           </span>
           <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-[1.1] mb-6">
             Redesigning ASPIN —<br className="hidden md:block" />
@@ -84,6 +86,17 @@ const FeaturedCaseStudy = () => {
             and restored clarity for users across multiple partners.
           </p>
         </section>
+
+        <CaseStudySummary
+          tldr="ASPIN is the platform banks, telcos and insurers use to launch and run insurance products — but its screens were organised around database tables, not the work people do. I restructured it around operator tasks such as onboarding, policies and claims, built a shared design system, and shipped the frontend myself. It now serves 5M customers across 11 countries, with a 4.0/5 partner CSAT and about 40% less custom work per partner."
+          facts={[
+            { label: "Role", value: "Senior Product Designer · UX and frontend" },
+            { label: "Team", value: "Cross-functional, 6–10 people across Kenya and Cape Town" },
+            { label: "Timeline", value: "2022–now" },
+            { label: "Status", value: "Shipped, 10+ partners" },
+            { label: "Outcome", value: "5M customers · 4.0/5 CSAT" },
+          ]}
+        />
 
         <div className="border-t border-border" />
 
@@ -522,17 +535,9 @@ const FeaturedCaseStudy = () => {
           </div>
         </section>
 
-        {/* Back link */}
-        <section className="py-12 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <Link
-            to="/#work"
-            className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
-            onClick={() => trackEvent("back_to_case_studies_clicked", { from: "aspin" })}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to all case studies
-          </Link>
-        </section>
+        <div className="border-t border-border" />
+
+        <CaseStudyEnd slug="aspin" />
       </main>
 
       {/* Lightbox */}

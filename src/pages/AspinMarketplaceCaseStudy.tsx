@@ -3,6 +3,8 @@ import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
+import CaseStudySummary from "@/components/portfolio/CaseStudySummary";
+import CaseStudyEnd from "@/components/portfolio/CaseStudyEnd";
 import ImageLightbox from "@/components/portfolio/ImageLightbox";
 import mp01 from "@/assets/marketplace/marketplace-01-home.webp";
 import mp02 from "@/assets/marketplace/marketplace-02-product.webp";
@@ -238,6 +240,78 @@ const TRUST_ITEMS = [
   { title: "Post-purchase claims information", text: "The confirmation email includes the claims process, emergency contacts, and policy summary — the most under-designed moment in Kenyan insurance." },
 ];
 
+const sections = [
+  { id: "context", label: "Context" },
+  { id: "research", label: "Research" },
+  { id: "problem", label: "Problem" },
+  { id: "system", label: "System map" },
+  { id: "competitors", label: "Competitors" },
+  { id: "products", label: "Products" },
+  { id: "journey", label: "Journey" },
+  { id: "staging", label: "Staging build" },
+  { id: "trust", label: "Trust" },
+  { id: "reflections", label: "Reflections" },
+  { id: "next-steps", label: "Next steps" },
+];
+
+function SectionMenu() {
+  const [active, setActive] = useState<string>(sections[0].id);
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const visible = entries.filter((e) => e.isIntersecting);
+        if (visible.length) setActive(visible[0].target.id);
+      },
+      { rootMargin: "-30% 0px -60% 0px" },
+    );
+    sections.forEach(({ id }) => {
+      const el = document.getElementById(id);
+      if (el) observer.observe(el);
+    });
+    return () => observer.disconnect();
+  }, []);
+
+  const listRef = useRef<HTMLUListElement>(null);
+  useEffect(() => {
+    // Scroll only the chip row; scrollIntoView here would interrupt the page's smooth scroll.
+    const list = listRef.current;
+    const chip = document.getElementById(`menu-${active}`);
+    if (list && chip) {
+      list.scrollTo({ left: chip.offsetLeft - list.clientWidth / 2 + chip.clientWidth / 2, behavior: "smooth" });
+    }
+  }, [active]);
+
+  return (
+    <nav
+      aria-label="Case study sections"
+      className="sticky top-14 z-40 bg-background/90 backdrop-blur-md border-b border-border"
+    >
+      <ul ref={listRef} className="relative max-w-5xl mx-auto px-6 md:px-12 lg:px-24 flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
+        {sections.map(({ id, label }) => (
+          <li key={id} className="shrink-0">
+            <a
+              id={`menu-${id}`}
+              href={`#${id}`}
+              aria-current={active === id ? "true" : undefined}
+              onClick={(e) => {
+                e.preventDefault();
+                const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                document.getElementById(id)?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
+                trackEvent("section_menu_clicked", { case_study: "aspin-marketplace", section: id });
+              }}
+              className={`block px-3 py-1.5 rounded-full text-xs font-sans font-medium transition-colors ${
+                active === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+              }`}
+            >
+              {label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+  );
+}
+
 const walkthrough = [
   { src: mp01, alt: "Landing page — five product lines, plus cover offered inside everyday banking moments" },
   { src: mp02, alt: "Product page — what's covered, what isn't, and real price anchors before any form" },
@@ -289,7 +363,7 @@ const AspinMarketplaceCaseStudy = () => {
             Back to portfolio
           </Link>
           <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
-            Featured Case Study
+            Case study · Concept
           </span>
         </div>
         {/* Reading progress bar */}
@@ -304,7 +378,7 @@ const AspinMarketplaceCaseStudy = () => {
         <section className="py-20 md:py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal>
             <span className="text-xs font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
-              Featured · Case Study
+              ASPIN Marketplace · 2026
             </span>
             <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-[1.1] mb-6">
               ASPIN Marketplace —<br className="hidden md:block" />
@@ -312,9 +386,10 @@ const AspinMarketplaceCaseStudy = () => {
               Comparison Platform
             </h1>
             <p className="text-lg md:text-xl font-sans text-muted-foreground leading-relaxed max-w-3xl mb-8">
-              An AI-assisted research and systems thinking case study. Kenya has 57 IRA-licensed insurers
-              but no platform that makes comparing and buying from them simple, transparent, and instant.
-              This is how I designed the platform to change that.
+              A systems design case study. Kenya has 57 IRA-licensed insurers but no platform that
+              makes comparing and buying from them simple, transparent, and instant. I mapped the whole
+              system — customers, insurers, regulation and payments — then designed and built the
+              platform to change that.
             </p>
             <a
               href="https://marketplace.staging.aspin-inclusivity.com/"
@@ -329,29 +404,21 @@ const AspinMarketplaceCaseStudy = () => {
           </Reveal>
         </section>
 
-        {/* Meta strip */}
-        <Reveal>
-          <div className="px-6 md:px-12 lg:px-24 max-w-5xl mx-auto pb-16">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 border-t border-b border-border py-8">
-              {[
-                { label: "Role", value: "Senior Product Designer · UX & Frontend" },
-                { label: "Market", value: "Kenya, East Africa" },
-                { label: "Stage", value: "Concept — AI Research Phase" },
-                { label: "Method", value: "AI Research + Systems Thinking" },
-              ].map((item) => (
-                <div key={item.label}>
-                  <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-1">{item.label}</p>
-                  <p className="text-sm font-sans text-foreground">{item.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </Reveal>
+        <CaseStudySummary
+          tldr="Buying insurance in Kenya means hidden prices, agents and paperwork. I mapped the full system — customers, 57 licensed insurers, regulation and payments — then designed and built a self-serve platform for comparing and buying cover across five product lines. It runs on staging today; user testing with real customers is the next step."
+          facts={[
+            { label: "Role", value: "Senior Product Designer · UX and frontend" },
+            { label: "Team", value: "Me on design and frontend, with the actuarial lead on research" },
+            { label: "Timeline", value: "2026" },
+            { label: "Status", value: "Concept with live staging" },
+            { label: "Outcome", value: "Full motor journey built; user testing next" },
+          ]}
+        />
 
-        <div className="border-t border-border" />
+        <SectionMenu />
 
         {/* ───────── 01 Context ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="context" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-12">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               01 — Context & Concept Origin
@@ -444,7 +511,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 02 AI Research ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="research" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               02 — AI-Assisted Research Process
@@ -485,7 +552,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 03 Problem ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="problem" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               03 — Problem Definition
@@ -544,7 +611,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 04 Systems Architecture — Accordion ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="system" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               04 — Systems Architecture
@@ -607,7 +674,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 05 Competitive Landscape ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="competitors" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               05 — Competitive Landscape
@@ -742,7 +809,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 06 Product Design — Vertical Tabs ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="products" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               06 — Product Design
@@ -807,7 +874,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 07 User Journey — Interactive Steps ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="journey" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               07 — User Journey Design
@@ -909,7 +976,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── Staging walkthrough ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="staging" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               The staging build
@@ -957,7 +1024,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 08 Trust Design — Interactive cards ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="trust" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               08 — Trust Design
@@ -1055,7 +1122,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 09 Reflections — Expandable principles ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="reflections" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               09 — Reflections & Design Principles
@@ -1087,7 +1154,7 @@ const AspinMarketplaceCaseStudy = () => {
         <div className="border-t border-border" />
 
         {/* ───────── 10 Status ───────── */}
-        <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        <section id="next-steps" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
               10 — Concept Status & Next Steps
@@ -1166,17 +1233,9 @@ const AspinMarketplaceCaseStudy = () => {
           </Reveal>
         </section>
 
-        {/* Back */}
-        <section className="py-12 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <Link
-            to="/#work"
-            className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
-            onClick={() => trackEvent("back_to_case_studies_clicked", { from: "aspin-marketplace" })}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to all case studies
-          </Link>
-        </section>
+        <div className="border-t border-border" />
+
+        <CaseStudyEnd slug="aspin-marketplace" />
       </main>
 
       {lightboxIndex !== null && (

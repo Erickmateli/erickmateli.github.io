@@ -3,11 +3,13 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { ArrowLeft } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
+import CaseStudySummary from "@/components/portfolio/CaseStudySummary";
+import CaseStudyEnd from "@/components/portfolio/CaseStudyEnd";
 import ImageLightbox from "@/components/portfolio/ImageLightbox";
 
 import ypBeforeHomepage from "@/assets/yp-before-homepage.jpg";
 import ypAfterShowcase from "@/assets/yp-after-showcase.jpg";
-import ypWireframes from "@/assets/yp-wireframes.png";
+import ypWireframes from "@/assets/yp-wireframes-teal.webp";
 import ypAnalytics2018 from "@/assets/yp-analytics-2018.webp";
 import ypAnalytics2020 from "@/assets/yp-analytics-2020.webp";
 
@@ -47,7 +49,7 @@ const YellowPagesCaseStudy = () => {
             Back to portfolio
           </Link>
           <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
-            Case Study
+            Case study · Shipped
           </span>
         </div>
       </nav>
@@ -56,12 +58,10 @@ const YellowPagesCaseStudy = () => {
         {/* ───────── Hero ───────── */}
         <section className="py-20 md:py-32 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <span className="text-xs font-sans font-medium tracking-[0.25em] uppercase text-primary block mb-6">
-            Case Study · Yellow Pages
+            Yellow Pages Kenya · 2019–2022
           </span>
           <h1 className="text-4xl md:text-6xl font-serif text-foreground leading-[1.1] mb-6">
-            Redesigning Yellow Pages Kenya —<br className="hidden md:block" />
-            Transforming a Legacy Directory<br className="hidden md:block" />
-            into a Modern Search Experience
+            Yellow Pages Kenya:<br className="hidden md:block" /> from legacy directory to task‑driven search
           </h1>
           <p className="text-lg md:text-xl font-sans text-muted-foreground leading-relaxed max-w-3xl">
             Yellow Pages is a business directory platform used across six countries.
@@ -70,6 +70,17 @@ const YellowPagesCaseStudy = () => {
             across every market it launched in.
           </p>
         </section>
+
+        <CaseStudySummary
+          tldr="A legacy business directory was slow and cluttered, and people left before finding what they came for. I led a redesign around one task — search, find, contact — prototyped it in code, and rolled it out across six countries. Users grew from 472K to 1.7M and the bounce rate fell from 33.8% to 24.4%."
+          facts={[
+            { label: "Role", value: "Lead UX Designer, also built the frontend prototype" },
+            { label: "Team", value: "4 people, across Kenya and Cape Verde" },
+            { label: "Timeline", value: "2019–2022" },
+            { label: "Status", value: "Shipped in 6 countries" },
+            { label: "Outcome", value: "472K → 1.7M users" },
+          ]}
+        />
 
         <div className="border-t border-border" />
 
@@ -580,17 +591,9 @@ const YellowPagesCaseStudy = () => {
           </div>
         </section>
 
-        {/* Back link */}
-        <section className="py-12 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <Link
-            to="/#work"
-            className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary hover:text-foreground transition-colors"
-            onClick={() => trackEvent("back_to_case_studies_clicked", { from: "yellow-pages" })}
-          >
-            <ArrowLeft className="w-4 h-4" />
-            Back to all case studies
-          </Link>
-        </section>
+        <div className="border-t border-border" />
+
+        <CaseStudyEnd slug="yellow-pages" />
       </main>
 
       {/* Lightbox */}

@@ -25,10 +25,11 @@ function PostHogPageView() {
   }, [location]);
 
   useEffect(() => {
+    // "instant" overrides the site-wide smooth scrolling so new pages start at the right spot.
     if (location.hash) {
-      document.getElementById(location.hash.slice(1))?.scrollIntoView();
+      document.getElementById(location.hash.slice(1))?.scrollIntoView({ behavior: "instant" });
     } else {
-      window.scrollTo(0, 0);
+      window.scrollTo({ top: 0, behavior: "instant" });
     }
   }, [location.pathname, location.hash]);
   return null;
