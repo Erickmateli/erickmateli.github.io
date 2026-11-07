@@ -1,14 +1,16 @@
 import { lazy, Suspense, useEffect } from "react";
 import { BrowserRouter, Route, Routes, useLocation } from "react-router-dom";
 import { capture } from "./lib/analytics";
+import { lazyPage } from "./lib/lazy-page";
+import PageErrorBoundary from "./components/portfolio/PageErrorBoundary";
 import Index from "./pages/Index.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import { useVisitNotification } from "./hooks/use-visit-notification.ts";
 
 // Case studies load on demand so the home page ships less JavaScript.
-const FeaturedCaseStudy = lazy(() => import("./pages/FeaturedCaseStudy.tsx"));
-const YellowPagesCaseStudy = lazy(() => import("./pages/YellowPagesCaseStudy.tsx"));
-const AspinMarketplaceCaseStudy = lazy(() => import("./pages/AspinMarketplaceCaseStudy.tsx"));
+const FeaturedCaseStudy = lazyPage(() => import("./pages/FeaturedCaseStudy.tsx"));
+const YellowPagesCaseStudy = lazyPage(() => import("./pages/YellowPagesCaseStudy.tsx"));
+const AspinMarketplaceCaseStudy = lazyPage(() => import("./pages/AspinMarketplaceCaseStudy.tsx"));
 
 // Dev-only preview of the case study kit; Vite drops this from production builds.
 const CaseStudyKit = import.meta.env.DEV ? lazy(() => import("./pages/dev/CaseStudyKit.tsx")) : null;
@@ -34,6 +36,7 @@ function PostHogPageView() {
 const App = () => (
   <BrowserRouter>
     <PostHogPageView />
+    <PageErrorBoundary>
     <Suspense fallback={<div className="min-h-screen bg-background" />}>
       <Routes>
         <Route path="/" element={<Index />} />
@@ -45,6 +48,7 @@ const App = () => (
         <Route path="*" element={<NotFound />} />
       </Routes>
     </Suspense>
+    </PageErrorBoundary>
   </BrowserRouter>
 );
 
