@@ -54,7 +54,7 @@ const caseStudies: OutcomeCaseStudy[] = [
     slug: "aspin-marketplace",
     project: "ASPIN Marketplace",
     meta: "Senior Product Designer · 2026",
-    status: "Concept with live staging",
+    status: "Live · pitching to partners across Africa",
     outcome: "Making 57 insurers comparable in minutes",
     summary:
       "A self-serve insurance comparison platform for Kenya across five product lines — mapped as a full system before a single screen, with trust designed into every step.",

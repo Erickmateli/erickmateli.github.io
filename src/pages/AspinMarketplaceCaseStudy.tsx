@@ -1,14 +1,18 @@
 import { useDocumentTitle } from "@/hooks/use-document-title";
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
-import { ArrowLeft, ExternalLink, ChevronDown, ChevronRight } from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { ArrowLeft, ExternalLink, ChevronDown, ChevronRight, Hourglass, SearchX, ShieldAlert } from "lucide-react";
 import { trackEvent } from "@/lib/track-event";
 import Reveal from "@/components/case-study/Reveal";
-import { useCounter } from "@/components/case-study/motion";
 import ReadingProgress from "@/components/case-study/ReadingProgress";
 import CaseStudySummary from "@/components/portfolio/CaseStudySummary";
 import CaseStudyEnd from "@/components/portfolio/CaseStudyEnd";
 import ImageLightbox from "@/components/portfolio/ImageLightbox";
+import ProblemCards from "@/components/case-study/ProblemCards";
+import DecisionCards from "@/components/case-study/DecisionCards";
+import StatCounters from "@/components/case-study/StatCounters";
+import Takeaways from "@/components/case-study/Takeaways";
+import marketplaceHero from "@/assets/marketplace/marketplace-card.webp";
 import mp01 from "@/assets/marketplace/marketplace-01-home.webp";
 import mp02 from "@/assets/marketplace/marketplace-02-product.webp";
 import mp03 from "@/assets/marketplace/marketplace-03-vehicle-form.webp";
@@ -19,21 +23,6 @@ import mp07 from "@/assets/marketplace/marketplace-07-otp.webp";
 import mp08 from "@/assets/marketplace/marketplace-08-documents.webp";
 import mp09 from "@/assets/marketplace/marketplace-09-payment.webp";
 import mp10 from "@/assets/marketplace/marketplace-10-confirmation.webp";
-
-// ─── Stat card with animated counter ─────────────────────────────────────────
-function StatCard({ stat, label, isNumber = false, target = 0, suffix = "", decimals = 0 }: {
-  stat: string; label: string; isNumber?: boolean; target?: number; suffix?: string; decimals?: number;
-}) {
-  const { ref, display } = useCounter(target, decimals);
-  return (
-    <div className="p-5 rounded-lg border border-border bg-card hover:border-primary/40 hover:shadow-md transition-all duration-300 group">
-      <p className="text-2xl md:text-3xl font-serif text-primary mb-1 group-hover:scale-105 transition-transform origin-left">
-        {isNumber ? <span ref={ref}>{display}{suffix}</span> : stat}
-      </p>
-      <p className="text-xs font-sans text-muted-foreground leading-relaxed">{label}</p>
-    </div>
-  );
-}
 
 // ─── Accordion item ───────────────────────────────────────────────────────────
 function AccordionItem({ number, title, text, defaultOpen = false }: {
@@ -58,33 +47,6 @@ function AccordionItem({ number, title, text, defaultOpen = false }: {
         }}
       >
         <p className="px-5 pb-5 pl-[4.5rem] text-sm font-sans text-muted-foreground leading-relaxed">{text}</p>
-      </div>
-    </div>
-  );
-}
-
-// ─── Principle item ───────────────────────────────────────────────────────────
-function PrincipleItem({ index, principle, text }: { index: number; principle: string; text: string }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div
-      className={`border-l-2 pl-6 cursor-pointer transition-all duration-300 ${open ? "border-primary" : "border-primary/30 hover:border-primary/60"}`}
-      onClick={() => setOpen(!open)}
-    >
-      <div className="flex items-start justify-between gap-3">
-        <h3 className={`text-base font-sans font-semibold transition-colors duration-200 ${open ? "text-foreground" : "text-foreground/80"}`}>
-          {index}. {principle}
-        </h3>
-        <ChevronRight className={`w-4 h-4 text-muted-foreground shrink-0 mt-0.5 transition-transform duration-300 ${open ? "rotate-90" : ""}`} />
-      </div>
-      <div
-        style={{
-          maxHeight: open ? "300px" : "0px",
-          overflow: "hidden",
-          transition: "max-height 0.35s ease",
-        }}
-      >
-        <p className="text-sm font-sans text-muted-foreground leading-relaxed mt-3 mb-1">{text}</p>
       </div>
     </div>
   );
@@ -179,75 +141,106 @@ const TRUST_ITEMS = [
   { title: "Post-purchase claims information", text: "The confirmation email includes the claims process, emergency contacts, and policy summary — the most under-designed moment in Kenyan insurance." },
 ];
 
-const sections = [
-  { id: "context", label: "Context" },
+const tabs = [
+  { id: "overview", label: "Overview" },
   { id: "research", label: "Research" },
-  { id: "problem", label: "Problem" },
-  { id: "system", label: "System map" },
-  { id: "competitors", label: "Competitors" },
-  { id: "products", label: "Products" },
-  { id: "journey", label: "Journey" },
-  { id: "staging", label: "Staging build" },
-  { id: "trust", label: "Trust" },
-  { id: "reflections", label: "Reflections" },
-  { id: "next-steps", label: "Next steps" },
-];
+  { id: "system", label: "System" },
+  { id: "design", label: "Design" },
+  { id: "staging", label: "Walkthrough" },
+  { id: "learnings", label: "Learnings" },
+] as const;
+type TabId = (typeof tabs)[number]["id"];
 
-function SectionMenu() {
-  const [active, setActive] = useState<string>(sections[0].id);
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const visible = entries.filter((e) => e.isIntersecting);
-        if (visible.length) setActive(visible[0].target.id);
-      },
-      { rootMargin: "-30% 0px -60% 0px" },
-    );
-    sections.forEach(({ id }) => {
-      const el = document.getElementById(id);
-      if (el) observer.observe(el);
-    });
-    return () => observer.disconnect();
-  }, []);
+// Old section links (from the previous scroll menu) still land on the right tab.
+const legacyHash: Record<string, TabId> = {
+  context: "overview", problem: "overview", competitors: "research", products: "design",
+  journey: "design", trust: "design", reflections: "learnings", "next-steps": "learnings",
+};
 
-  const listRef = useRef<HTMLUListElement>(null);
+function tabFromHash(hash: string): TabId {
+  const key = hash.replace("#", "");
+  return tabs.find((t) => t.id === key)?.id ?? legacyHash[key] ?? "overview";
+}
+
+function CaseStudyTabs({ activeTab, onSelect }: { activeTab: TabId; onSelect: (id: TabId) => void }) {
+  const refs = useRef<Record<string, HTMLButtonElement | null>>({});
+  const listRef = useRef<HTMLDivElement>(null);
+
+  // Keep the active tab visible in the horizontally scrolling bar on small screens.
   useEffect(() => {
-    // Scroll only the chip row; scrollIntoView here would interrupt the page's smooth scroll.
     const list = listRef.current;
-    const chip = document.getElementById(`menu-${active}`);
-    if (list && chip) {
-      list.scrollTo({ left: chip.offsetLeft - list.clientWidth / 2 + chip.clientWidth / 2, behavior: "smooth" });
-    }
-  }, [active]);
+    const tab = refs.current[activeTab];
+    if (list && tab) list.scrollTo({ left: tab.offsetLeft - list.clientWidth / 2 + tab.clientWidth / 2 });
+  }, [activeTab]);
+
+  const onKeyDown = (e: React.KeyboardEvent) => {
+    const i = tabs.findIndex((t) => t.id === activeTab);
+    const last = tabs.length - 1;
+    const next =
+      e.key === "ArrowRight" ? (i === last ? 0 : i + 1)
+      : e.key === "ArrowLeft" ? (i === 0 ? last : i - 1)
+      : e.key === "Home" ? 0
+      : e.key === "End" ? last
+      : null;
+    if (next === null) return;
+    e.preventDefault();
+    onSelect(tabs[next].id);
+    refs.current[tabs[next].id]?.focus();
+  };
 
   return (
-    <nav
-      aria-label="Case study sections"
-      className="sticky top-14 z-40 bg-background/90 backdrop-blur-md border-b border-border"
-    >
-      <ul ref={listRef} className="relative max-w-5xl mx-auto px-6 md:px-12 lg:px-24 flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]">
-        {sections.map(({ id, label }) => (
-          <li key={id} className="shrink-0">
-            <a
-              id={`menu-${id}`}
-              href={`#${id}`}
-              aria-current={active === id ? "true" : undefined}
-              onClick={(e) => {
-                e.preventDefault();
-                const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-                document.getElementById(id)?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth" });
-                trackEvent("section_menu_clicked", { case_study: "aspin-marketplace", section: id });
-              }}
-              className={`block px-3 py-1.5 rounded-full text-xs font-sans font-medium transition-colors ${
-                active === id ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground"
+    <div className="sticky top-14 z-40 bg-background/90 backdrop-blur-md border-y border-border">
+      <div
+        ref={listRef}
+        role="tablist"
+        aria-label="Case study chapters"
+        onKeyDown={onKeyDown}
+        className="max-w-5xl mx-auto px-6 md:px-12 lg:px-24 flex gap-1 overflow-x-auto py-2 [scrollbar-width:none]"
+      >
+        {tabs.map((t, i) => {
+          const selected = t.id === activeTab;
+          return (
+            <button
+              key={t.id}
+              ref={(el) => (refs.current[t.id] = el)}
+              role="tab"
+              id={`tab-${t.id}`}
+              aria-selected={selected}
+              aria-controls={t.id}
+              tabIndex={selected ? 0 : -1}
+              onClick={() => onSelect(t.id)}
+              className={`shrink-0 flex items-center gap-2 px-3.5 py-2 rounded-full text-sm font-sans font-medium transition-colors ${
+                selected ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground hover:bg-muted"
               }`}
             >
-              {label}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </nav>
+              <span className={`text-xs ${selected ? "opacity-80" : "opacity-60"}`}>{String(i + 1).padStart(2, "0")}</span>
+              {t.label}
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
+function NextTabButton({ activeTab, onSelect }: { activeTab: TabId; onSelect: (id: TabId) => void }) {
+  const i = tabs.findIndex((t) => t.id === activeTab);
+  const next = tabs[i + 1];
+  if (!next) return null;
+  return (
+    <div className="px-6 md:px-12 lg:px-24 max-w-5xl mx-auto pb-16 md:pb-20 flex justify-end">
+      <button
+        type="button"
+        onClick={() => onSelect(next.id)}
+        className="group inline-flex items-center gap-3 rounded-lg border border-border bg-card px-5 py-4 text-left hover:border-primary/40 transition-colors"
+      >
+        <span>
+          <span className="block text-xs font-sans text-muted-foreground">Next chapter</span>
+          <span className="block text-base font-serif text-foreground">{next.label}</span>
+        </span>
+        <ChevronRight className="w-5 h-5 text-primary group-hover:translate-x-0.5 transition-transform" aria-hidden="true" />
+      </button>
+    </div>
   );
 }
 
@@ -265,8 +258,16 @@ const walkthrough = [
 ];
 
 const AspinMarketplaceCaseStudy = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const activeTab = tabFromHash(location.hash);
+  const selectTab = (id: TabId) => {
+    if (id === activeTab) return;
+    trackEvent("marketplace_tab_viewed", { tab: id });
+    navigate({ hash: id });
+  };
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
-  useDocumentTitle("ASPIN Marketplace Concept");
+  useDocumentTitle("ASPIN Marketplace");
   // Active vertical tab
   const [activeVertical, setActiveVertical] = useState(0);
 
@@ -289,7 +290,7 @@ const AspinMarketplaceCaseStudy = () => {
             Back to portfolio
           </Link>
           <span className="hidden sm:inline text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
-            Case study · Concept
+            Case study · Live
           </span>
         </div>
         <ReadingProgress />
@@ -320,45 +321,65 @@ const AspinMarketplaceCaseStudy = () => {
               className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary border border-primary/30 rounded px-4 py-2 hover:bg-primary/5 transition-colors"
               onClick={() => trackEvent("staging_env_clicked", { case_study: "aspin-marketplace" })}
             >
-              View Staging Environment
+              View the live demo
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </Reveal>
         </section>
 
         <CaseStudySummary
-          tldr="Buying insurance in Kenya means hidden prices, agents and paperwork. I mapped the full system — customers, 57 licensed insurers, regulation and payments — then designed and built a self-serve platform for comparing and buying cover across five product lines. It runs on staging today; user testing with real customers is the next step."
+          readingTime="4 min read"
+          tldr="Buying insurance in Kenya means hidden prices, agents and paperwork. I mapped the full system — customers, 57 licensed insurers, regulation and payments — then designed and built a self-serve platform for comparing and buying cover across five product lines. It's now live and being pitched to partners across Africa."
           facts={[
             { label: "Role", value: "Senior Product Designer · UX and frontend" },
             { label: "Team", value: "Me on design and frontend, with the actuarial lead on research" },
             { label: "Timeline", value: "2026" },
-            { label: "Status", value: "Concept with live staging" },
-            { label: "Outcome", value: "Full motor journey built; user testing next" },
+            { label: "Status", value: "Live · pitching to partners across Africa" },
+            { label: "Outcome", value: "Full motor journey live, from quote to policy" },
           ]}
         />
 
-        <SectionMenu />
+        <Reveal className="px-6 md:px-12 lg:px-24 max-w-5xl mx-auto pb-16">
+          <figure>
+            <button
+              type="button"
+              onClick={() => setLightboxIndex(0)}
+              className="block w-full rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 cursor-zoom-in transition-colors"
+            >
+              <img src={marketplaceHero} alt="ASPIN Marketplace home page with five product lines to compare" className="w-full h-auto" />
+            </button>
+            <figcaption className="text-xs font-sans text-muted-foreground mt-2">
+              The live marketplace: five product lines, prices shown up front.
+            </figcaption>
+          </figure>
+        </Reveal>
 
+        <CaseStudyTabs activeTab={activeTab} onSelect={selectTab} />
+
+        <div
+          role="tabpanel"
+          id={activeTab}
+          aria-labelledby={`tab-${activeTab}`}
+          tabIndex={-1}
+          className="scroll-mt-28 focus:outline-none"
+        >
+
+          {activeTab === "overview" && (
+            <>
         {/* ───────── 01 Context ───────── */}
         <section id="context" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-12">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              01 — Context & Concept Origin
+              Context & origin
             </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-6">
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-6">
               Why insurance in Kenya needed a new approach
             </h2>
             <div className="space-y-4 text-base font-sans text-muted-foreground leading-relaxed">
               <p>
-                Kenya has one of the most dynamic fintech ecosystems in Africa — yet insurance penetration
-                fell to <strong className="text-foreground">2.2% of GDP</strong> in H1 2025, against a global average of 7.4%.
-                Despite gross premiums growing 9.4% to KES 395 billion in FY 2024, the market is growing in
-                volume but <em>shrinking in reach</em>. More Kenyans are being left out, not fewer.
-              </p>
-              <p>
-                The opportunity is not a gap in insurance products — Kenya has 57 IRA-licensed insurers.
-                The gap is structural: there is no platform that makes comparing and buying from these
-                57 insurers simple, transparent, and instant. That is what ASPIN Marketplace is designed to solve.
+                Insurance reached just <strong className="text-foreground">2.2% of GDP</strong> in H1 2025, against a
+                7.4% global average — premiums are growing, but reach is shrinking. The gap isn't products: Kenya has
+                57 licensed insurers. It's that nothing makes comparing and buying from them simple.
               </p>
             </div>
           </Reveal>
@@ -401,30 +422,24 @@ const AspinMarketplaceCaseStudy = () => {
             </div>
           </Reveal>
 
-          {/* Animated stats grid */}
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4 max-w-4xl">
-            {[
-              { stat: "2.2%", label: "Insurance penetration H1 2025 (IRA + CBK)", isNumber: true, target: 2.2, suffix: "%", decimals: 1 },
-              { stat: "7.4%", label: "Global average (Allianz 2025)", isNumber: true, target: 7.4, suffix: "%", decimals: 1 },
-              { stat: "57", label: "IRA-licensed insurers in Kenya (March 2025)", isNumber: true, target: 57, suffix: "" },
-              { stat: "63.2%", label: "Kenyans who say they can't afford premiums (FinAccess 2024)", isNumber: true, target: 63.2, suffix: "%", decimals: 1 },
-              { stat: "1,842", label: "Formal complaints to IRA in 2024", isNumber: true, target: 1842, suffix: "" },
-              { stat: "KES 395bn", label: "Gross premiums FY 2024 — growing but penetration falls" },
-            ].map((item, i) => (
-              <Reveal key={i} delay={i * 80}>
-                <StatCard {...item} />
-              </Reveal>
-            ))}
+          <div className="max-w-4xl">
+            <StatCounters
+              stats={[
+                { target: 57, label: "Licensed insurers", note: "IRA list, March 2025" },
+                { target: 63.2, decimals: 1, suffix: "%", label: "Say cover is unaffordable", note: "FinAccess 2024" },
+                { target: 1842, label: "Complaints to the IRA", note: "in 2024" },
+                { target: 395, prefix: "KES ", suffix: "bn", label: "Gross premiums", note: "FY 2024, yet reach is falling" },
+              ]}
+            />
           </div>
 
           <Reveal delay={200} className="mt-8 max-w-3xl">
             <div className="p-5 rounded-lg border border-primary/20 bg-primary/5">
               <p className="text-xs font-sans font-medium tracking-[0.1em] uppercase text-primary mb-2">Research Note</p>
               <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-                A counterintuitive finding: 63.2% of Kenyans cite unaffordability as the reason they don't have
-                insurance — but most don't know that motor TPO starts at KES 7,500/yr and health cover starts at
-                KES 1,200/mo. The problem is <strong className="text-foreground">partly informational, not purely economic</strong>.
-                Price anchors before the funnel are absent across the entire industry.
+                63.2% of Kenyans say insurance is unaffordable — yet most don't know motor cover starts at
+                KES 7,500/yr. The barrier is <strong className="text-foreground">partly informational, not purely economic</strong>,
+                and no one shows prices before the form.
               </p>
             </div>
           </Reveal>
@@ -432,13 +447,52 @@ const AspinMarketplaceCaseStudy = () => {
 
         <div className="border-t border-border" />
 
-        {/* ───────── 02 AI Research ───────── */}
-        <section id="research" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+        {/* ───────── 03 Problem ───────── */}
+        <section id="problem" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              02 — AI-Assisted Research Process
+              Problem Definition
             </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-6">
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-6">
+              A system broken at multiple layers
+            </h2>
+            <p className="text-base font-sans text-muted-foreground leading-relaxed">
+              Buying insurance in Kenya breaks down at three layers, one after another.
+            </p>
+          </Reveal>
+
+          <ProblemCards
+            problems={[
+              {
+                icon: SearchX,
+                title: "Discovery",
+                text: "People don't know what exists or what it costs. 63.2% say cover is unaffordable, yet most have never seen a starting price.",
+              },
+              {
+                icon: Hourglass,
+                title: "Process",
+                text: "Buying means agent calls or separate visits to each of 57 insurers — slow, opaque and full of jargon.",
+              },
+              {
+                icon: ShieldAlert,
+                title: "Trust",
+                text: "1,842 complaints to the IRA in 2024 and long claims delays have damaged confidence across the industry.",
+              },
+            ]}
+          />
+        </section>
+            </>
+          )}
+
+          {activeTab === "research" && (
+            <>
+        {/* ───────── 02 AI Research ───────── */}
+        <section id="ai-research" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+          <Reveal className="max-w-3xl mb-10">
+            <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
+              AI-Assisted Research Process
+            </p>
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-6">
               How AI was used to think through the system
             </h2>
             <p className="text-base font-sans text-muted-foreground leading-relaxed">
@@ -473,135 +527,13 @@ const AspinMarketplaceCaseStudy = () => {
 
         <div className="border-t border-border" />
 
-        {/* ───────── 03 Problem ───────── */}
-        <section id="problem" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <Reveal className="max-w-3xl mb-10">
-            <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              03 — Problem Definition
-            </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-6">
-              A system broken at multiple layers
-            </h2>
-            <p className="text-base font-sans text-muted-foreground leading-relaxed">
-              The Kenyan insurance purchase journey fails at three distinct layers:{" "}
-              <strong className="text-foreground">discovery</strong> (people don't know what exists or what it costs),{" "}
-              <strong className="text-foreground">process</strong> (buying is agent-dependent, slow, and opaque), and{" "}
-              <strong className="text-foreground">trust</strong> (claims delays and fraud have damaged confidence industry-wide).
-            </p>
-          </Reveal>
-
-          <div className="grid md:grid-cols-2 gap-8 max-w-4xl">
-            <Reveal>
-              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-destructive mb-4">Documented System Failures</p>
-              <ul className="space-y-3">
-                {[
-                  "No structured comparison across Kenya's 57+ insurers — all require separate visits or agent calls",
-                  "1,842 formal complaints to IRA in 2024 — 76.3% against general insurers",
-                  "63.2% of Kenyans cite unaffordability — but many have never seen a starting price",
-                  "Claims delays endemic — IRA introduced draft claims guidelines in 2024–25 to address this",
-                  "Plain language absent — policy jargon alienates ordinary buyers",
-                  "Home and travel pricing not publicly listed anywhere",
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm font-sans text-muted-foreground leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-destructive/60 shrink-0 mt-1.5" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-            <Reveal delay={100}>
-              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">ASPIN Design Responses</p>
-              <ul className="space-y-3">
-                {[
-                  "Live side-by-side comparison from multiple IRA-licensed insurers on one results page",
-                  "Transparency-first: inclusions, exclusions, and IRA registration surfaced prominently",
-                  "Price anchors shown before the quote funnel — first platform to list home & travel starting prices",
-                  "Partner selection includes IRA compliance with new claims guidelines",
-                  "Plain-language 'What this covers' and 'What is not covered' on every product page",
-                  "M-Pesa pre-filled from phone number captured at quote stage — removing re-entry friction",
-                ].map((item, i) => (
-                  <li key={i} className="flex items-start gap-3 text-sm font-sans text-muted-foreground leading-relaxed">
-                    <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </Reveal>
-          </div>
-        </section>
-
-        <div className="border-t border-border" />
-
-        {/* ───────── 04 Systems Architecture — Accordion ───────── */}
-        <section id="system" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <Reveal className="max-w-3xl mb-10">
-            <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              04 — Systems Architecture
-            </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-4">
-              Mapping the full system before designing screens
-            </h2>
-            <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-              Five distinct layers — each with its own constraints, dependencies, and failure modes.{" "}
-              <span className="text-foreground">Click each layer to expand.</span>
-            </p>
-          </Reveal>
-
-          {/* ── Platform layer stack diagram ── */}
-          <Reveal className="max-w-4xl mb-8">
-            <div className="rounded-lg border border-border bg-card p-6 overflow-hidden">
-              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-6">
-                Platform Architecture — Five Layers
-              </p>
-              <div className="relative">
-                {/* Connecting line */}
-                <div className="absolute left-[1.75rem] top-4 bottom-4 w-px bg-gradient-to-b from-primary/60 via-primary/30 to-primary/10 hidden md:block" />
-                <div className="space-y-2">
-                  {[
-                    { label: "User Layer", sub: "Vehicle owners · Families · SME operators", width: "100%" },
-                    { label: "Product Layer", sub: "Motor · Health · Home · Travel · Business", width: "88%" },
-                    { label: "Insurer Network", sub: "57 IRA-licensed insurers · Neutral ordering", width: "76%" },
-                    { label: "Regulatory Layer", sub: "IRA sandboxes · DPA 2019 · Claims guidelines", width: "64%" },
-                    { label: "Payment Infrastructure", sub: "M-Pesa primary · Card secondary", width: "52%" },
-                  ].map((layer, i) => (
-                    <div key={layer.label} className="flex items-center gap-4">
-                      <div className="w-3.5 h-3.5 rounded-full bg-primary shrink-0 relative z-10 hidden md:block ring-2 ring-background" />
-                      <div
-                        className="flex-1 flex items-center justify-between px-4 py-3 rounded border border-border/60 bg-muted/30 hover:bg-muted/60 transition-colors duration-200"
-                        style={{ maxWidth: layer.width }}
-                      >
-                        <span className="text-sm font-sans font-medium text-foreground">{layer.label}</span>
-                        <span className="text-xs font-sans text-muted-foreground hidden sm:block">{layer.sub}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </Reveal>
-
-          <Reveal className="space-y-3 max-w-4xl">
-            {[
-              { number: "01", title: "User Layer", defaultOpen: true, text: "Three validated segments: vehicle owners (motor TPO is legally mandatory, creating a captive entry point); families seeking health cover (driven by rising hospital costs and SHA limitations); and SME operators (underserved by all four existing competitors). Core anxieties: data misuse, hidden costs, and whether claims will actually be paid." },
-              { number: "02", title: "Product Layer", text: "Five insurance verticals — Motor, Health, Home, Travel, Business — each designed as a distinct journey with its own question set, insurer panel, and comparison dimensions. A single generic form would degrade completion rates across all five categories. Specificity per vertical is a systems constraint, not a UX preference." },
-              { number: "03", title: "Insurer Network Layer", text: "57 IRA-licensed general and life insurers, of which ASPIN targets the most consumer-facing. Platform neutrality is structural: no insurer pays for placement. Results are ordered by price and coverage match — this neutrality is both ethically correct and commercially important." },
-              { number: "04", title: "Regulatory Layer", text: "The IRA is not just a licensing authority — it is an active reform agenda in 2025, implementing regulatory sandboxes, Risk-Based Supervision Phase II, and draft claims guidelines. ASPIN is designed in alignment with this reform direction, not merely in compliance with existing rules. This is a meaningful positioning difference." },
-              { number: "05", title: "Payment Infrastructure Layer", text: "M-Pesa is Kenya's dominant payment rail — treating it as the primary path, not an option, is a systems-level design decision. Phone number captured at the quote stage pre-fills the M-Pesa checkout prompt, eliminating the most common drop-off point in Kenyan fintech checkout flows." },
-            ].map((item) => (
-              <AccordionItem key={item.number} {...item} />
-            ))}
-          </Reveal>
-        </section>
-
-        <div className="border-t border-border" />
-
         {/* ───────── 05 Competitive Landscape ───────── */}
         <section id="competitors" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              05 — Competitive Landscape
+              Competitive Landscape
             </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-4">
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-4">
               A nascent, agent-heavy market with four real players
             </h2>
             <p className="text-base font-sans text-muted-foreground leading-relaxed">
@@ -623,7 +555,7 @@ const AspinMarketplaceCaseStudy = () => {
                   { name: "PesaBazaar", scores: [1, 1, 1, 0, 1, 0.5, 0] },
                   { name: "MTek-Services", scores: [1, 1, 0, 1, 0, 0.5, 0.5] },
                   { name: "Imana / MyKava", scores: [1, 1, 1, 1, 1, 1, 0.8] },
-                  { name: "ASPIN (concept)", scores: [1, 1, 1, 1, 1, 1, 1], highlight: true },
+                  { name: "ASPIN Marketplace", scores: [1, 1, 1, 1, 1, 1, 1], highlight: true },
                 ].map((row) => (
                   <div key={row.name} className={`flex items-center gap-3 rounded px-3 py-2 ${row.highlight ? "bg-primary/5 border border-primary/20" : ""}`}>
                     <span className={`text-xs font-sans w-36 shrink-0 ${row.highlight ? "font-semibold text-foreground" : "text-muted-foreground"}`}>{row.name}</span>
@@ -691,7 +623,7 @@ const AspinMarketplaceCaseStudy = () => {
                   { name: "PesaBazaar", values: ["✓", "✓", "✓", "—", "✓", "~", "—"], highlight: false },
                   { name: "MTek-Services", values: ["✓", "✓", "—", "✓", "—", "~", "~"], highlight: false },
                   { name: "Imana / MyKava", values: ["✓", "✓", "✓", "✓", "✓", "✓", "Fast"], highlight: false },
-                  { name: "ASPIN (concept)", values: ["✓", "✓", "✓", "✓", "✓", "Deep", "Instant"], highlight: true },
+                  { name: "ASPIN Marketplace", values: ["✓", "✓", "✓", "✓", "✓", "Deep", "Instant"], highlight: true },
                 ].map((row) => (
                   <tr
                     key={row.name}
@@ -727,6 +659,109 @@ const AspinMarketplaceCaseStudy = () => {
             ))}
           </div>
         </section>
+            </>
+          )}
+
+          {activeTab === "system" && (
+            <>
+        {/* ───────── 04 Systems Architecture — Accordion ───────── */}
+        <section id="system-map" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+          <Reveal className="max-w-3xl mb-10">
+            <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
+              Systems Architecture
+            </p>
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-4">
+              Mapping the full system before designing screens
+            </h2>
+            <p className="text-sm font-sans text-muted-foreground leading-relaxed">
+              Five distinct layers — each with its own constraints, dependencies, and failure modes.{" "}
+              <span className="text-foreground">Click each layer to expand.</span>
+            </p>
+          </Reveal>
+
+          {/* ── Platform layer stack diagram ── */}
+          <Reveal className="max-w-4xl mb-8">
+            <div className="rounded-lg border border-border bg-card p-6 overflow-hidden">
+              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-6">
+                Platform Architecture — Five Layers
+              </p>
+              <div className="relative">
+                {/* Connecting line */}
+                <div className="absolute left-[1.75rem] top-4 bottom-4 w-px bg-gradient-to-b from-primary/60 via-primary/30 to-primary/10 hidden md:block" />
+                <div className="space-y-2">
+                  {[
+                    { label: "User Layer", sub: "Vehicle owners · Families · SME operators", width: "100%" },
+                    { label: "Product Layer", sub: "Motor · Health · Home · Travel · Business", width: "88%" },
+                    { label: "Insurer Network", sub: "57 IRA-licensed insurers · Neutral ordering", width: "76%" },
+                    { label: "Regulatory Layer", sub: "IRA sandboxes · DPA 2019 · Claims guidelines", width: "64%" },
+                    { label: "Payment Infrastructure", sub: "M-Pesa primary · Card secondary", width: "52%" },
+                  ].map((layer, i) => (
+                    <div key={layer.label} className="flex items-center gap-4">
+                      <div className="w-3.5 h-3.5 rounded-full bg-primary shrink-0 relative z-10 hidden md:block ring-2 ring-background" />
+                      <div
+                        className="flex-1 flex items-center justify-between px-4 py-3 rounded border border-border/60 bg-muted/30 hover:bg-muted/60 transition-colors duration-200"
+                        style={{ maxWidth: layer.width }}
+                      >
+                        <span className="text-sm font-sans font-medium text-foreground">{layer.label}</span>
+                        <span className="text-xs font-sans text-muted-foreground hidden sm:block">{layer.sub}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </Reveal>
+
+          <Reveal className="space-y-3 max-w-4xl">
+            {[
+              { number: "01", title: "User Layer", defaultOpen: true, text: "Three segments: vehicle owners (motor cover is mandatory), families seeking health cover, and SME operators no competitor serves well. Their shared fears: data misuse, hidden costs, and unpaid claims." },
+              { number: "02", title: "Product Layer", text: "Five product lines, each its own journey with its own questions, insurers and comparison points. One generic form would hurt completion across all five." },
+              { number: "03", title: "Insurer Network Layer", text: "57 licensed insurers, with no paid placement: results are ordered by price and coverage match. Neutrality is both the ethical and the commercial choice." },
+              { number: "04", title: "Regulatory Layer", text: "The IRA is actively reforming in 2025 — sandboxes, risk-based supervision and new claims guidelines. ASPIN is designed to align with that direction, not just comply with today's rules." },
+              { number: "05", title: "Payment Infrastructure Layer", text: "M-Pesa is the primary path, not an option. The phone number from the quote pre-fills checkout, removing the most common drop-off point in Kenyan fintech." },
+            ].map((item) => (
+              <AccordionItem key={item.number} {...item} />
+            ))}
+          </Reveal>
+        </section>
+            </>
+          )}
+
+          {activeTab === "design" && (
+            <>
+        {/* ───────── Key decisions ───────── */}
+        <section id="decisions" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+          <Reveal className="max-w-3xl mb-10">
+            <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
+              Key decisions
+            </p>
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight">
+              Three decisions that shape the experience
+            </h2>
+          </Reveal>
+          <DecisionCards
+            decisions={[
+              {
+                title: "Show prices before the form",
+                problem: "Prices stay hidden until after a long form, so people assume cover is unaffordable.",
+                decision: "Starting prices on every product card and page, before any questions.",
+                result: "People see what cover costs before they commit any time.",
+              },
+              {
+                title: "Compare side by side, neutrally",
+                problem: "Comparing meant calling agents or visiting insurers one by one.",
+                decision: "Quotes from several licensed insurers on one page, ranked by price and cover, with no paid placement.",
+                result: "Comparison in minutes, without an agent.",
+              },
+              {
+                title: "M-Pesa first, no retyping",
+                problem: "Re-entering payment details is the most common checkout drop-off.",
+                decision: "The quote's phone number pre-fills M-Pesa, and bank sign-in pre-fills the form.",
+                result: "Fewer steps from quote to active policy.",
+              },
+            ]}
+          />
+        </section>
 
         <div className="border-t border-border" />
 
@@ -734,9 +769,9 @@ const AspinMarketplaceCaseStudy = () => {
         <section id="products" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              06 — Product Design
+              Product Design
             </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-4">
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-4">
               Five verticals. Five tailored journeys.
             </h2>
             <p className="text-sm font-sans text-muted-foreground leading-relaxed">
@@ -799,9 +834,9 @@ const AspinMarketplaceCaseStudy = () => {
         <section id="journey" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              07 — User Journey Design
+              User Journey Design
             </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-4">
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-4">
               From curiosity to covered in three steps
             </h2>
             <p className="text-sm font-sans text-muted-foreground leading-relaxed">
@@ -897,61 +932,13 @@ const AspinMarketplaceCaseStudy = () => {
 
         <div className="border-t border-border" />
 
-        {/* ───────── Staging walkthrough ───────── */}
-        <section id="staging" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
-          <Reveal className="max-w-3xl mb-10">
-            <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              The staging build
-            </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-snug mb-4">
-              From landing page to active policy, in ten screens.
-            </h2>
-            <p className="text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
-              The motor journey as built on staging — the same funnel as above, now real: price
-              anchors before the form, quotes side by side, bank sign-in to skip retyping, and
-              mobile money at checkout.
-            </p>
-            <p className="text-xs font-sans text-muted-foreground mt-4">
-              Staging screens with sample data. Personal details are blurred for privacy.
-            </p>
-          </Reveal>
-
-          <div className="grid sm:grid-cols-2 gap-4">
-            {walkthrough.map((img, i) => (
-              <button
-                key={img.alt}
-                onClick={() => {
-                  setLightboxIndex(i);
-                  trackEvent("walkthrough_screen_opened", { case_study: "aspin-marketplace", screen: i + 1 });
-                }}
-                className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
-              >
-                <div className="aspect-[16/10] overflow-hidden">
-                  <img
-                    src={img.src}
-                    alt={img.alt}
-                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
-                    loading="lazy"
-                  />
-                </div>
-                <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
-                  <span className="font-medium text-primary mr-1.5">{String(i + 1).padStart(2, "0")}</span>
-                  {img.alt}
-                </p>
-              </button>
-            ))}
-          </div>
-        </section>
-
-        <div className="border-t border-border" />
-
         {/* ───────── 08 Trust Design — Interactive cards ───────── */}
         <section id="trust" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              08 — Trust Design
+              Trust Design
             </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-4">
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-4">
               Trust is a design problem that starts before the first click
             </h2>
             <p className="text-base font-sans text-muted-foreground leading-relaxed">
@@ -1040,37 +1027,87 @@ const AspinMarketplaceCaseStudy = () => {
             ))}
           </div>
         </section>
+            </>
+          )}
 
-        <div className="border-t border-border" />
+          {activeTab === "staging" && (
+            <>
+        {/* ───────── Staging walkthrough ───────── */}
+        <section id="staging-build" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
+          <Reveal className="max-w-3xl mb-10">
+            <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
+              The product
+            </p>
+            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-snug mb-4">
+              From landing page to active policy, in ten screens.
+            </h2>
+            <p className="text-base md:text-lg font-sans text-muted-foreground leading-relaxed">
+              The live motor journey — the funnel from the Design chapter, built: price
+              anchors before the form, quotes side by side, bank sign-in to skip retyping, and
+              mobile money at checkout.
+            </p>
+            <p className="text-xs font-sans text-muted-foreground mt-4">
+              Screens with sample data. Personal details are blurred for privacy.
+            </p>
+          </Reveal>
 
+          <div className="grid sm:grid-cols-2 gap-4">
+            {walkthrough.map((img, i) => (
+              <button
+                key={img.alt}
+                onClick={() => {
+                  setLightboxIndex(i);
+                  trackEvent("walkthrough_screen_opened", { case_study: "aspin-marketplace", screen: i + 1 });
+                }}
+                className="group relative rounded-lg border border-border overflow-hidden bg-card hover:border-primary/40 transition-all hover:shadow-lg cursor-pointer text-left"
+              >
+                <div className="aspect-[16/10] overflow-hidden">
+                  <img
+                    src={img.src}
+                    alt={img.alt}
+                    className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-300"
+                    loading="lazy"
+                  />
+                </div>
+                <p className="text-xs font-sans text-muted-foreground px-3 py-2 bg-card border-t border-border">
+                  <span className="font-medium text-primary mr-1.5">{String(i + 1).padStart(2, "0")}</span>
+                  {img.alt}
+                </p>
+              </button>
+            ))}
+          </div>
+        </section>
+            </>
+          )}
+
+          {activeTab === "learnings" && (
+            <>
         {/* ───────── 09 Reflections — Expandable principles ───────── */}
         <section id="reflections" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              09 — Reflections & Design Principles
+              Reflections & Design Principles
             </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-4">
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-4">
               What live research and systems thinking revealed
             </h2>
             <p className="text-sm font-sans text-muted-foreground leading-relaxed">
-              Six principles that extend beyond this platform to any product operating in a low-trust,
-              high-stakes, regulated consumer financial category.{" "}
-              <span className="text-foreground">Click each to expand.</span>
+              Six principles for any product in a low-trust, regulated financial category.
             </p>
           </Reveal>
 
-          <Reveal className="space-y-4 max-w-4xl">
-            {[
-              { principle: "Verify AI outputs — the correction is part of the methodology", text: "The initial AI research produced two significant errors: claiming no comparison platforms existed in Kenya, and understating pricing floors. Both were caught through cross-referencing against live sources. A designer who accepts AI research uncritically is not using AI as a tool — they are outsourcing their thinking to it." },
-              { principle: "Map the system before designing the screen", text: "Understanding the five layers of the platform was more valuable than any single screen design decision. Systems mapping revealed that what appears to be a UX problem (drop-off at checkout) is actually a payment infrastructure problem (M-Pesa re-entry), requiring a solution at the data-collection layer, not the checkout layer." },
-              { principle: "Transparency is a conversion mechanic, not just an ethical position", text: "Showing exclusions, linking insurer IRA registrations, surfacing claims guidelines alignment, and displaying price anchors before the funnel all reduce uncertainty. In a low-trust category, reducing uncertainty converts. Hiding complexity does not make insurance feel simpler." },
-              { principle: "Infrastructure is UX — M-Pesa is not a feature", text: "M-Pesa is Kenya's dominant payment infrastructure. Designing checkout around it as the primary path is a systems decision, not a UX flourish. The seamless interaction is only possible because the system was designed with M-Pesa as a first-class constraint from the beginning." },
-              { principle: "Price anchors resolve imagined affordability barriers", text: "63.2% of Kenyans cite unaffordability as the reason they don't have insurance — but most have never seen a starting price before entering a quote funnel. Showing these numbers before the funnel resolves a barrier that is partly informational, not purely economic." },
-              { principle: "Regulatory alignment is a product strategy", text: "The IRA's 2025 reform agenda is moving in the same direction as good product design: transparency, consumer protection, and faster resolution. A platform designed in alignment with this agenda is not just compliant — it is positioned ahead of incumbents who are slower to adapt." },
-            ].map((item, i) => (
-              <PrincipleItem key={i} index={i + 1} {...item} />
-            ))}
-          </Reveal>
+          <div className="max-w-4xl">
+            <Takeaways
+              items={[
+              { title: "Verify AI outputs — the correction is part of the methodology", text: "The first AI research claimed no comparison platforms existed and understated prices. Checking live sources caught both errors." },
+              { title: "Map the system before designing the screen", text: "What looked like a checkout UX problem was really a payments problem (re-entering M-Pesa details), solved earlier, at the quote stage." },
+              { title: "Transparency is a conversion mechanic, not just an ethical position", text: "Showing exclusions, licences and prices up front reduces uncertainty — and in a low-trust category, less uncertainty converts." },
+              { title: "Infrastructure is UX — M-Pesa is not a feature", text: "A smooth M-Pesa checkout is only possible because the system treated M-Pesa as a first-class constraint from day one." },
+              { title: "Price anchors resolve imagined affordability barriers", text: "Most people who say insurance is unaffordable have never seen a starting price. Showing one first removes a barrier that's partly imagined." },
+              { title: "Regulatory alignment is a product strategy", text: "Regulation is moving toward transparency and faster claims — the same direction as good design. Aligning early puts the product ahead of slower incumbents." },
+              ]}
+            />
+          </div>
         </section>
 
         <div className="border-t border-border" />
@@ -1079,21 +1116,20 @@ const AspinMarketplaceCaseStudy = () => {
         <section id="next-steps" className="scroll-mt-28 py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto">
           <Reveal className="max-w-3xl mb-10">
             <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">
-              10 — Concept Status & Next Steps
+              Where it is now
             </p>
-            <h2 className="text-2xl md:text-3xl font-serif text-foreground leading-tight mb-4">
-              What exists and what comes next
+            <h2 className="text-2xl md:text-4xl font-serif text-foreground leading-tight mb-4">
+              Live, and in front of partners across Africa
             </h2>
             <p className="text-base font-sans text-muted-foreground leading-relaxed">
-              ASPIN Marketplace exists as a validated concept: a staged environment with five defined product
-              verticals, a mapped systems architecture, a live-researched competitive landscape, and a
-              corrected pricing framework.
+              The marketplace is built and running, and is now being pitched to partners across Africa.
+              The research, system map and trust framework behind it are what make it adaptable to new markets.
             </p>
           </Reveal>
 
           <div className="grid md:grid-cols-2 gap-10 max-w-4xl">
             <Reveal>
-              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">Completed to Date</p>
+              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-primary mb-4">Built</p>
               <ul className="space-y-3">
                 {[
                   "AI-assisted market research across Kenya's 57 IRA-licensed insurers, verified against March 2025 IRA published list",
@@ -1101,7 +1137,7 @@ const AspinMarketplaceCaseStudy = () => {
                   "Systems mapping of all five platform layers",
                   "Corrected pricing framework verified against live 2025 sources",
                   "Trust design framework with seven documented mechanisms",
-                  "Staging environment with live product pages and quote form scaffolding",
+                  "Live motor journey: product pages, quotes, payment plans, documents, payment and policy issuance",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm font-sans text-muted-foreground leading-relaxed">
                     <span className="w-1.5 h-1.5 rounded-full bg-primary shrink-0 mt-1.5" />
@@ -1111,15 +1147,14 @@ const AspinMarketplaceCaseStudy = () => {
               </ul>
             </Reveal>
             <Reveal delay={100}>
-              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-4">Immediate Next Steps</p>
+              <p className="text-xs font-sans font-medium tracking-[0.15em] uppercase text-muted-foreground mb-4">Next</p>
               <ul className="space-y-3">
                 {[
-                  "Primary user research — interviews with vehicle owners, urban families, and SME operators",
-                  "Insurer API outreach — live pricing integration with CIC, APA, Jubilee, Britam, and AAR",
-                  "High-fidelity Figma prototypes across all five verticals",
-                  "Usability testing on the quote form, comparison results page, and M-Pesa checkout",
-                  "Roadmap scoping for COMESA and WIBA product lines",
-                  "IRA licensing application — formalising the regulatory pathway",
+                  "Partner pilots in new African markets",
+                  "Usability testing with real customers on quotes, comparison and checkout",
+                  "Live pricing integrations with more insurers",
+                  "Roadmap for COMESA and WIBA product lines",
+                  "Regulatory pathway with the IRA",
                 ].map((item, i) => (
                   <li key={i} className="flex items-start gap-3 text-sm font-sans text-muted-foreground leading-relaxed">
                     <span className="w-1.5 h-1.5 rounded-full bg-border shrink-0 mt-1.5" />
@@ -1130,6 +1165,8 @@ const AspinMarketplaceCaseStudy = () => {
             </Reveal>
           </div>
         </section>
+
+        <div className="border-t border-border" />
 
         {/* ───────── Takeaway ───────── */}
         <section className="py-16 md:py-20 px-6 md:px-12 lg:px-24 max-w-5xl mx-auto bg-muted/30">
@@ -1149,11 +1186,16 @@ const AspinMarketplaceCaseStudy = () => {
               className="inline-flex items-center gap-2 text-sm font-sans font-medium text-primary border border-primary/30 rounded px-4 py-2 hover:bg-primary/5 transition-colors"
               onClick={() => trackEvent("staging_env_clicked_footer", { case_study: "aspin-marketplace" })}
             >
-              View the Staging Environment
+              View the live demo
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </Reveal>
         </section>
+            </>
+          )}
+
+          <NextTabButton activeTab={activeTab} onSelect={selectTab} />
+        </div>
 
         <div className="border-t border-border" />
 
