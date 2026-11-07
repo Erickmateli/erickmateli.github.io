@@ -63,7 +63,7 @@ const FeaturedCaseStudy = () => {
             <ArrowLeft className="w-4 h-4" />
             Back to portfolio
           </Link>
-          <span className="text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
+          <span className="hidden sm:inline text-xs font-sans font-medium tracking-[0.2em] uppercase text-primary">
             Case study · Shipped
           </span>
         </div>
